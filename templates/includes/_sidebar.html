@@ -1,0 +1,65 @@
+<aside
+  class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col fixed h-full transition-colors duration-200"
+>
+  <div class="p-6">
+    <h1 class="text-primary font-bold text-xl flex items-center gap-2">
+      <span class="material-symbols-outlined">shopping_basket</span>
+      SuperMarket POS
+    </h1>
+    {% if user.is_authenticated %}
+    <div class="mt-4">
+      <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+        {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
+      </p>
+      <p class="text-xs text-slate-500 dark:text-slate-500">
+        {% if user.is_superuser %}
+          Administrateur
+        {% else %}
+          Utilisateur
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+  </div>
+  
+  <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+    {% for item in sidebar_items %}
+      <a
+        href="{% url item.url %}"
+        class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium {% if current_app == item.app %}bg-blue-50 dark:bg-blue-900/20 text-primary{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800{% endif %} rounded-lg transition-colors"
+      >
+        <span class="material-symbols-outlined text-xl">{{ item.icon }}</span>
+        {{ item.title }}
+      </a>
+    {% endfor %}
+  </nav>
+  
+  <div class="p-4 mt-auto border-t border-slate-200 dark:border-slate-800">
+    <button
+      class="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors mb-2"
+      onclick="document.documentElement.classList.toggle('dark')"
+    >
+      <span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+      <span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+      Mode <span class="dark:hidden">sombre</span><span class="hidden dark:inline">clair</span>
+    </button>
+    
+    {% if user.is_authenticated %}
+    <a 
+      href="{% url 'logout' %}" 
+      class="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors border border-slate-200 dark:border-slate-800"
+    >
+      <span class="material-symbols-outlined text-xl">logout</span>
+      Déconnexion
+    </a>
+    {% else %}
+    <a 
+      href="{% url 'login' %}" 
+      class="flex items-center justify-center gap-3 w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+    >
+      <span class="material-symbols-outlined text-xl">login</span>
+      Connexion
+    </a>
+    {% endif %}
+  </div>
+</aside>
