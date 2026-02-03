@@ -79,9 +79,9 @@ Application web de gestion de facturation développée avec Django.
 ## ✨ Fonctionnalités
 
 - Authentification des utilisateurs
-- Gestion des clients et des factures
-- Tableau de bord de suivi
-- Génération de factures
+- Gestion des clients via le module `phone`
+- Gestion de caisse via le module `caisse`
+- Menu latéral et navigation via le module `gestionnaire`
 
 ## 📋 Prérequis
 
@@ -177,7 +177,7 @@ Créez un fichier `.env` à la racine du projet avec les variables suivantes :
 SECRET_KEY = votre_secret_key
 DEBUG=True
 
-# Paramtres de la BD
+# Paramètres de la BD
 DB_NAME = facturation
 DB_USER = user_name
 DB_PASSWORD = password
@@ -191,9 +191,9 @@ PORT = 5432
 facturation/
 ├── apps/
 │   ├── authentification/    # Gestion des utilisateurs et authentification
-│   ├── audit_journal/       # Journalisation des actions
-│   ├── checkout/            # Gestion des paiements
-│   └── core/                # Fonctionnalités de base
+│   ├── phone/               # Gestion des contacts
+│   ├── caisse/              # Gestion des paiements
+│   └── gestionnaire/        # Fonctionnalités de base
 ├── facturation/             # Configuration du projet
 ├── media/                   # Fichiers téléchargés
 ├── static/                  # Fichiers statiques

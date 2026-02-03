@@ -42,18 +42,12 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     # Core
-    'apps.core',
+    'apps.gestionnaire',
     # Apps
     'facturation',
     'apps.authentification',
-    'apps.dashboard',
-    'apps.checkout',
-    'apps.handle_articles',
-    'apps.handle_customers',
-    'apps.handle_users',
-    'apps.audit_journal',
-    'apps.report',
-    'apps.settings',
+    'apps.caisse',
+    'apps.phone',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'apps.core.context_processors.sidebar_context',
+                'apps.gestionnaire.context_processors.sidebar_context',
             ],
         },
     },

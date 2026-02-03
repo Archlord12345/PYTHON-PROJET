@@ -26,13 +26,8 @@ urlpatterns = [
     path('', home_view, name='home'),
     # Tailwind development server
     path("__reload__/", include("django_browser_reload.urls")),
-    #apps urls
-    path('audit_journal/', include('apps.audit_journal.urls')),
-    path('checkout/', include('apps.checkout.urls')),
-    path('dashboard/', include('apps.dashboard.urls')),
-    path('handle_articles/', include('apps.handle_articles.urls')),
-    path('handle_customers/', include('apps.handle_customers.urls')),
-    path('handle_users/', include('apps.handle_users.urls')),
-    path('report/', include('apps.report.urls')),
-    path('settings/', include('apps.settings.urls')),
+    # apps urls
+    path('authentification/', include('apps.authentification.urls')),
+    path('caisse/', include('apps.caisse.urls')),
+    path('phone/', include('apps.phone.urls')),
 ]
