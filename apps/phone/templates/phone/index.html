@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phone - Scanner</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22c55e;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 20%, #1f2937 0%, #0f172a 55%, #0b1020 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 32px auto;
+      padding: 0 16px 48px;
+    }
+    .title {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 2fr 1fr; }
+    }
+    .panel {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+    .video {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: #0b1020;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    button, input[type="file"]::file-selector-button {
+      background: var(--accent);
+      color: #0b1020;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #334155;
+      color: var(--text);
+    }
+    .result {
+      font-size: 16px;
+      line-height: 1.4;
+      background: #0b1020;
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 56px;
+      word-break: break-word;
+    }
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">App Phone</div>
+    <div class="subtitle">Scan en temps réel + upload d’image</div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="label">Camera</div>
+        <video id="preview" class="video" playsinline></video>
+        <div class="row">
+          <button id="startBtn">Démarrer</button>
+          <button id="stopBtn" class="secondary">Arrêter</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="label">Résultat</div>
+        <div id="result" class="result">Aucun scan pour le moment.</div>
+        <div class="row">
+          <button id="copyBtn" class="secondary">Copier</button>
+        </div>
+      </div>
+
+      <div class="panel" style="grid-column: 1 / -1;">
+        <div class="label">Upload d’image</div>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input id="fileInput" type="file" name="image" accept="image/*" required>
+          <button type="submit">Analyser</button>
+        </form>
+        <div class="row">
+          <div id="uploadStatus" class="subtitle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@zxing/browser@0.1.5/umd/index.min.js"></script>
+  <script>
+    const resultEl = document.getElementById('result');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const video = document.getElementById('preview');
+    const uploadForm = document.getElementById('uploadForm');
+    let codeReader = null;
+
+    function setResult(text) {
+      resultEl.textContent = text || 'Aucun scan pour le moment.';
+    }
+
+    startBtn.addEventListener('click', async () => {
+      if (!window.ZXingBrowser) {
+        setResult('ZXing non chargé.');
+        return;
+      }
+      if (!codeReader) {
+        codeReader = new ZXingBrowser.BrowserMultiFormatReader();
+      }
+      try {
+        await codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+          if (result) {
+            setResult(result.getText());
+          }
+        });
+      } catch (e) {
+        setResult('Erreur caméra: ' + e.message);
+      }
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (codeReader) {
+        codeReader.reset();
+      }
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const text = resultEl.textContent.trim();
+      if (!text || text === 'Aucun scan pour le moment.') return;
+      await navigator.clipboard.writeText(text);
+    });
+
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      uploadStatus.textContent = 'Analyse...';
+      const formData = new FormData(uploadForm);
+      try {
+        const res = await fetch("{% url 'phone:upload' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          },
+          body: formData
+        });
+        const data = await res.json();
+        if (data.ok) {
+          setResult(data.text || '');
+          uploadStatus.textContent = 'Scan terminé.';
+        } else {
+          uploadStatus.textContent = data.error || 'Aucun code trouvé.';
+        }
+      } catch (err) {
+        uploadStatus.textContent = 'Erreur upload.';
+      }
+    });
+  </script>
+</body>
+</html>

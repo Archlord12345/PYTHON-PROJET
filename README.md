@@ -89,10 +89,20 @@ Application web de gestion de facturation développée avec Django.
 - Gestion de caisse via le module `caisse`
 - Menu latéral et navigation via le module `gestionnaire`
 
+## 🧰 Technologies utilisées
+
+- Django 6 (backend)
+- PostgreSQL (base de données)
+- Tailwind via `django-tailwind`
+- Scan temps réel côté navigateur : `@zxing/browser`
+- Scan d’images côté serveur : `pyzbar` + `Pillow`
+- Dépendance système (Linux) : `zbar` pour `pyzbar`
+
 ## 📋 Prérequis
 
 - Python 3.8+
 - PostgreSQL 12+
+- `zbar` (pour le scan d’images via `pyzbar`)
 
 ### 🔧 Configuration de PostgreSQL
 
@@ -210,7 +220,7 @@ facturation/
 ## 🧩 Modules
 
 - `authentification` : Connexion et inscription
-- `phone` : Gestion des contacts/clients
+- `phone` : Scanner les codes-barres et QR pour en extraire le texte
 - `caisse` : Encaissements et ventes
 - `gestionnaire` : Navigation et menu latéral
 
