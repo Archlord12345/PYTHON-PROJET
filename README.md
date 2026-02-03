@@ -2,6 +2,12 @@
 
 Application web de gestion de facturation développée avec Django.
 
+## 👥 Chefs d'équipe
+
+- `authentification` + `gestionnaire` : Tchinda (chef), Miguel (sous-chef)
+- `caisse` : Charles
+- `phone` : Nghomsi
+
 ## 🗃️ Modèle de données
 
 ### 🔑 Entités principales
@@ -201,6 +207,19 @@ facturation/
 └── theme/                   # Thème et assets
 ```
 
+## 🧩 Modules
+
+- `authentification` : Connexion et inscription
+- `phone` : Gestion des contacts/clients
+- `caisse` : Encaissements et ventes
+- `gestionnaire` : Navigation et menu latéral
+
+## 🌐 Routes principales
+
+- `authentification/` : pages login/signup
+- `phone/` : pages clients
+- `caisse/` : pages de caisse
+
 ## 💻 Développement
 
 ### 🎨 Configuration de Tailwind CSS
@@ -256,7 +275,7 @@ mon_module/
 #### ✅ Bonnes pratiques pour les équipes
 
 1. **👥 Un module = Une équipe**
-   - Chaque équipe est responsable d'un module spécifique
+   - Chaque équipe est responsable d'un des 4 modules (`authentification`, `phone`, `caisse`, `gestionnaire`)
    - Les dépendances entre modules doivent être minimales et bien documentées
 
 2. **🏷️ Espaces de noms**
