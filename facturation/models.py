@@ -1,19 +1,35 @@
 from django.db import models
 
 class Client(models.Model):
-    nom = models.CharField(max_length=100)
-    type = models.CharField(max_length=50, blank=True, null=True)
+    TYPE_CHOICES = [
+        ("enregistre", "Enregistré"),
+        ("anonyme", "Anonyme"),
+    ]
+
+    nom = models.CharField(max_length=100, blank=True, null=True)
+    prenom = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
     telephone = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return self.nom
+        full_name = " ".join(part for part in [self.prenom, self.nom] if part)
+        return full_name or "Client"
 
 
 class Utilisateur(models.Model):
+    ROLE_CHOICES = [
+        ("Administrateur", "Administrateur"),
+        ("Gestionnaire", "Gestionnaire"),
+        ("Caissier", "Caissier"),
+        ("Comptable", "Comptable"),
+    ]
+
     login = models.CharField(max_length=50, unique=True)
+    nom = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
     mot_de_passe = models.CharField(max_length=255)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
     actif = models.BooleanField(default=True)
 
     def __str__(self):
@@ -23,8 +39,17 @@ class Utilisateur(models.Model):
 class Article(models.Model):
     code_barres = models.CharField(max_length=50, unique=True)
     nom = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
     prix_HT = models.DecimalField(max_digits=10, decimal_places=2)
     prix_TTC = models.DecimalField(max_digits=10, decimal_places=2)
+    taux_TVA = models.DecimalField(
+        max_digits=5,
+        decimal_places=3,
+        default=0,
+        help_text="Taux en décimal (ex: 0.18 pour 18%)",
+    )
+    categorie = models.CharField(max_length=100, blank=True, null=True)
+    unite_mesure = models.CharField(max_length=50, blank=True, null=True)
     stock_actuel = models.PositiveIntegerField(default=0)
     stock_minimum = models.PositiveIntegerField(default=0)
     actif = models.BooleanField(default=True)
@@ -34,13 +59,31 @@ class Article(models.Model):
 
 
 class Facture(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    MODE_PAIEMENT_CHOICES = [
+        ("especes", "Espèces"),
+        ("carte", "Carte"),
+        ("cheque", "Chèque"),
+        ("virement", "Virement"),
+        ("ticket_resto", "Ticket resto"),
+        ("mixte", "Mixte"),
+    ]
+    STATUT_CHOICES = [
+        ("payee", "Payée"),
+        ("annulee", "Annulée"),
+        ("remboursee", "Remboursée"),
+    ]
+
+    date_facture = models.DateTimeField(auto_now_add=True)
+    montant_HT = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    montant_TVA = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    montant_TTC = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    mode_paiement = models.CharField(max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True, null=True)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default="payee")
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     caissier = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"Facture {self.id} - {self.client.nom}"
+        return f"Facture {self.id} - {self.client}"
 
 
 class DetailFacture(models.Model):

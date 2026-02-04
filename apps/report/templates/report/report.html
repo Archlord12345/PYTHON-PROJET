@@ -10,21 +10,22 @@
   </div>
   <div class="flex flex-wrap gap-3">
     <div class="relative">
-      <select class="appearance-none bg-slate-100/80 dark:bg-zinc-900 border border-transparent dark:border-zinc-800 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-700 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
-        <option>Cette semaine</option>
-        <option>Ce mois</option>
-        <option>Cette année</option>
+      <select class="appearance-none bg-slate-100/80 dark:bg-zinc-900 border border-transparent dark:border-zinc-800 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-700 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40" data-period-select>
+        <option value="day" {% if period == "day" %}selected{% endif %}>Aujourd'hui</option>
+        <option value="week" {% if period == "week" %}selected{% endif %}>Cette semaine</option>
+        <option value="month" {% if period == "month" %}selected{% endif %}>Ce mois</option>
+        <option value="year" {% if period == "year" %}selected{% endif %}>Cette année</option>
       </select>
       <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-[18px]">expand_more</span>
     </div>
-    <button class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all">
+    <a href="{% url 'report:export_csv' %}?period={{ period }}" class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all">
       <span class="material-symbols-outlined text-[18px]">download</span>
       Export Excel
-    </button>
-    <button class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all">
+    </a>
+    <a href="{% url 'report:export_pdf' %}?period={{ period }}" class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all">
       <span class="material-symbols-outlined text-[18px]">description</span>
       Export PDF
-    </button>
+    </a>
   </div>
 </header>
 
@@ -46,7 +47,7 @@
       <div class="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-slate-200/80 dark:border-zinc-800 shadow-sm">
         <h3 class="text-sm font-medium text-slate-500 dark:text-zinc-400 mb-3">{{ stat.label }}</h3>
         <p class="text-2xl font-bold mb-1 dark:text-white">{{ stat.value }}</p>
-        <p class="text-xs font-medium {% if stat.trend_up %}text-green-600{% else %}text-slate-400{% endif %}">{{ stat.trend }}</p>
+        <p class="text-xs font-medium {% if stat.trend_up is True %}text-green-600{% elif stat.trend_up is False %}text-red-600{% else %}text-slate-400{% endif %}">{{ stat.trend }}</p>
       </div>
     {% endfor %}
   </div>
@@ -54,18 +55,24 @@
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
     <div class="lg:col-span-3 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200/80 dark:border-zinc-800 shadow-sm min-h-[300px] flex flex-col">
       <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">Ventes par jour</h3>
-      <div class="flex-1 rounded-xl border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
+      <div class="flex-1">
+        <canvas id="salesByDayChart" class="w-full h-full"></canvas>
+      </div>
     </div>
     <div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200/80 dark:border-zinc-800 shadow-sm min-h-[300px] flex flex-col">
       <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">Ventes par catégorie</h3>
-      <div class="flex-1 rounded-xl border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900"></div>
+      <div class="flex-1">
+        <canvas id="salesByCategoryChart" class="w-full h-full"></canvas>
+      </div>
     </div>
   </div>
 
   <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200/80 dark:border-zinc-800 shadow-sm">
     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-6">Répartition des modes de paiement</h3>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      <div class="rounded-xl border border-slate-200/70 dark:border-zinc-800 min-h-[220px] bg-white dark:bg-zinc-900"></div>
+      <div class="min-h-[220px]">
+        <canvas id="paymentsChart" class="w-full h-full"></canvas>
+      </div>
       <div class="space-y-3">
         {% for pay in paiements %}
           <div class="flex items-center justify-between p-3 border border-slate-200/70 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900">
@@ -98,21 +105,21 @@
         <div class="bg-green-50/70 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 p-6 rounded-xl">
           <p class="text-sm font-medium text-green-700 dark:text-green-400 mb-2">Stock normal</p>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-green-600 dark:text-green-500">234</span>
+            <span class="text-3xl font-bold text-green-600 dark:text-green-500">{{ stock_normal }}</span>
             <span class="text-xs text-green-700/70 dark:text-green-400/70">produits</span>
           </div>
         </div>
         <div class="bg-orange-50/70 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30 p-6 rounded-xl">
           <p class="text-sm font-medium text-orange-700 dark:text-orange-400 mb-2">Stock bas</p>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-orange-600 dark:text-orange-500">12</span>
+            <span class="text-3xl font-bold text-orange-600 dark:text-orange-500">{{ stock_bas }}</span>
           </div>
           <p class="text-xs text-orange-700/70 dark:text-orange-400/70 mt-1">produits à réapprovisionner</p>
         </div>
         <div class="bg-red-50/70 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 p-6 rounded-xl">
           <p class="text-sm font-medium text-red-700 dark:text-red-400 mb-2">Rupture</p>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-red-600 dark:text-red-500">3</span>
+            <span class="text-3xl font-bold text-red-600 dark:text-red-500">{{ rupture }}</span>
           </div>
           <p class="text-xs text-red-700/70 dark:text-red-400/70 mt-1">produits en rupture</p>
         </div>
@@ -137,6 +144,8 @@
             </div>
             <p class="text-xs text-slate-400">{{ move.time }}</p>
           </div>
+        {% empty %}
+          <p class="text-sm text-slate-500">Aucun mouvement récent.</p>
         {% endfor %}
       </div>
     </div>
@@ -145,9 +154,17 @@
       <div class="flex items-start gap-4 p-4 bg-red-50 dark:bg-red-900/10 rounded-lg">
         <span class="material-icons-outlined text-red-500 mt-0.5">warning</span>
         <div>
-          <p class="text-sm font-semibold text-red-900 dark:text-red-400">3 produits en rupture totale</p>
-          <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">Huile d'olive, Sucre roux, et Farine T55 ne sont plus en stock. Action immédiate requise.</p>
-          <button class="mt-3 text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Voir les produits</button>
+          <p class="text-sm font-semibold text-red-900 dark:text-red-400">
+            {{ rupture }} produit{% if rupture != 1 %}s{% endif %} en rupture totale
+          </p>
+          {% if rupture_articles %}
+            <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">
+              {{ rupture_articles|join:", " }}{% if rupture > rupture_articles|length %} et autres{% endif %} ne sont plus en stock.
+            </p>
+            <button class="mt-3 text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Voir les produits</button>
+          {% else %}
+            <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">Aucun produit en rupture.</p>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -180,6 +197,8 @@
             <p class="text-lg font-bold text-slate-900 dark:text-white">{{ item.amount }}</p>
           </div>
         </div>
+      {% empty %}
+        <p class="text-sm text-slate-500">Aucun détail de TVA disponible.</p>
       {% endfor %}
     </div>
   </div>
@@ -222,6 +241,91 @@
     });
 
     activate('ventes');
+  })();
+</script>
+<script>
+  (function () {
+    const select = document.querySelector('[data-period-select]');
+    if (!select) return;
+    select.addEventListener('change', function () {
+      const url = new URL(window.location.href);
+      url.searchParams.set('period', select.value);
+      window.location.href = url.toString();
+    });
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  (function () {
+    const salesByDay = JSON.parse('{{ sales_by_day_json|escapejs }}');
+    const salesByCategory = JSON.parse('{{ sales_by_category_json|escapejs }}');
+    const payments = JSON.parse('{{ payments_chart_json|escapejs }}');
+
+    const dayCtx = document.getElementById('salesByDayChart');
+    if (dayCtx) {
+      new Chart(dayCtx, {
+        type: 'bar',
+        data: {
+          labels: salesByDay.map((d) => d.label),
+          datasets: [{
+            data: salesByDay.map((d) => d.value),
+            backgroundColor: '#60a5fa',
+            borderRadius: 8,
+          }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: '#e5e7eb' } },
+          },
+        },
+      });
+    }
+
+    const catCtx = document.getElementById('salesByCategoryChart');
+    if (catCtx) {
+      new Chart(catCtx, {
+        type: 'line',
+        data: {
+          labels: salesByCategory.map((d) => d.label),
+          datasets: [{
+            data: salesByCategory.map((d) => d.value),
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+            tension: 0.35,
+            fill: true,
+          }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: '#e5e7eb' } },
+          },
+        },
+      });
+    }
+
+    const payCtx = document.getElementById('paymentsChart');
+    if (payCtx) {
+      new Chart(payCtx, {
+        type: 'pie',
+        data: {
+          labels: payments.map((p) => p.label),
+          datasets: [{
+            data: payments.map((p) => p.value),
+            backgroundColor: payments.map((p) => p.color),
+          }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+        },
+      });
+    }
   })();
 </script>
 {% endblock %}
