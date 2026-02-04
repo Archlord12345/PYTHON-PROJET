@@ -1,0 +1,113 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+        {% tailwind_css %}
+        <script>
+            (function () {
+                const root = document.documentElement;
+                const stored = localStorage.getItem('theme');
+                if (stored === 'dark') {
+                    root.classList.add('dark');
+                } else {
+                    root.classList.remove('dark');
+                }
+            })();
+        </script>
+    </head>
+
+    <body class="bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 min-h-screen" style="font-family: Inter, sans-serif;">
+        {% include "includes/_sidebar.html" %}
+        <main class="ml-16 md:ml-64 p-8 min-h-screen transition-all duration-200" data-main>
+            {% block content %}{% endblock %}
+        </main>
+        {% block extra_js %}{% endblock %}
+        <script>
+            (function () {
+                const btn = document.querySelector('[data-theme-toggle]');
+                if (!btn) return;
+                btn.addEventListener('click', function () {
+                    const root = document.documentElement;
+                    const isDark = root.classList.toggle('dark');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                });
+            })();
+        </script>
+        <script>
+            (function () {
+                const toggle = document.querySelector('[data-sidebar-toggle]');
+                const sidebar = document.querySelector('[data-sidebar]');
+                const main = document.querySelector('[data-main]');
+                const labels = document.querySelectorAll('[data-sidebar-label]');
+                const brand = document.querySelector('[data-sidebar-brand]');
+                const user = document.querySelector('[data-sidebar-user]');
+                const nav = document.querySelector('[data-sidebar-nav]');
+                const footer = document.querySelector('[data-sidebar-footer]');
+                if (!sidebar || !main) return;
+
+                const mq = window.matchMedia('(min-width: 768px)');
+
+                function setCollapsed(collapsed) {
+                    sidebar.classList.toggle('w-16', collapsed);
+                    sidebar.classList.toggle('w-64', !collapsed);
+                    sidebar.classList.toggle('md:w-16', collapsed);
+                    sidebar.classList.toggle('md:w-64', !collapsed);
+                    main.classList.toggle('md:ml-16', collapsed);
+                    main.classList.toggle('md:ml-64', !collapsed);
+                    main.classList.toggle('ml-16', collapsed);
+                    main.classList.toggle('ml-64', !collapsed);
+                    nav && nav.classList.toggle('px-2', collapsed);
+                    nav && nav.classList.toggle('px-3', !collapsed);
+                    footer && footer.classList.toggle('px-2', collapsed);
+                    footer && footer.classList.toggle('p-4', !collapsed);
+                    labels.forEach((el) => el.classList.toggle('hidden', collapsed));
+                    if (brand) brand.classList.toggle('hidden', collapsed);
+                    if (user) user.classList.toggle('hidden', collapsed);
+                    if (mq.matches) {
+                        localStorage.setItem('sidebar', collapsed ? 'collapsed' : 'expanded');
+                    }
+                }
+
+                function setChevron() {
+                    if (!toggle) return;
+                    const icon = toggle.querySelector('.material-symbols-outlined');
+                    if (!icon) return;
+                    icon.textContent = sidebar.classList.contains('w-16') ? 'chevron_right' : 'chevron_left';
+                }
+
+                if (toggle) {
+                    toggle.addEventListener('click', function () {
+                        const collapsed = sidebar.classList.contains('w-16');
+                        setCollapsed(!collapsed);
+                        setChevron();
+                    });
+                }
+
+                function handleResize() {
+                    if (mq.matches) {
+                        const stored = localStorage.getItem('sidebar');
+                        setCollapsed(stored === 'collapsed');
+                        setChevron();
+                    } else {
+                        setCollapsed(true);
+                    }
+                }
+
+                handleResize();
+                if (mq.addEventListener) {
+                    mq.addEventListener('change', handleResize);
+                } else if (mq.addListener) {
+                    mq.addListener(handleResize);
+                }
+            })();
+        </script>
+    </body>
+</html>

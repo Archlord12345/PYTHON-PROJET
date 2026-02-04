@@ -1,0 +1,33 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Accueil - Facturation</title>
+        {% tailwind_css %}
+    </head>
+    <body class="bg-gray-100">
+        <div class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenue sur votre application de facturation</h1>
+                <p class="text-gray-600 mb-6">Gérez facilement vos factures, clients et produits.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h2 class="text-xl font-semibold text-blue-700">Factures</h2>
+                        <p class="text-gray-600">Créez et gérez vos factures en quelques clics</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h2 class="text-xl font-semibold text-green-700">Clients</h2>
+                        <p class="text-gray-600">Gérez votre base de données clients</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h2 class="text-xl font-semibold text-purple-700">Produits</h2>
+                        <p class="text-gray-600">Gérez votre catalogue de produits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
