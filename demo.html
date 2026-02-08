@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démo - SuperMarket POS</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f9fafb;
+            color: #111827;
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: white;
+            margin: 0 0 1rem 0;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .feature {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature h3 {
+            color: #0f172a;
+            margin: 0 0 12px 0;
+            font-size: 1.25rem;
+        }
+
+        .feature p {
+            color: #6b7280;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .cta {
+            background: #0f172a;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .cta:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .demo-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 40px 0;
+        }
+
+        .demo-section h2 {
+            color: #0f172a;
+            margin: 0 0 24px 0;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .test-data {
+            display: grid;
+            gap: 12px;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 4px solid #0f172a;
+        }
+
+        .test-item code {
+            background: #e5e7eb;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .shortcut {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .key {
+            background: #0f172a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .screenshot {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .screenshot h4 {
+            margin: 0 0 12px 0;
+            color: #0f172a;
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            height: 250px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <h1>🛒 SuperMarket POS</h1>
+        <p>Interface de Caisse Moderne et Intuitive</p>
+        <div style="margin-top: 32px;">
+            <a href="http://127.0.0.1:8000/caisse/" class="cta">Ouvrir l'Application →</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <div class="icon">⚡</div>
+            <h3>Scan Rapide</h3>
+            <p>Scannez les codes-barres directement ou recherchez manuellement. Interface optimisée pour la vitesse.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">🎨</div>
+            <h3>Design Moderne</h3>
+            <p>Interface élégante et professionnelle avec animations fluides et expérience utilisateur soignée.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">⌨️</div>
+            <h3>Raccourcis Clavier</h3>
+            <p>Gagnez du temps avec les raccourcis clavier (F1, F2, F5, ESC) pour toutes les actions courantes.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">📊</div>
+            <h3>Calculs Automatiques</h3>
+            <p>Totaux HT, TVA et TTC calculés en temps réel. Gestion automatique des quantités et des prix.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">🖨️</div>
+            <h3>Impression Ticket</h3>
+            <p>Génération et impression de tickets de caisse professionnels avec toutes les informations légales.</p>
+        </div>
+
+        <div class="feature">
+            <div class="icon">📱</div>
+            <h3>Responsive</h3>
+            <p>Interface adaptée aux écrans de caisse standards. Design optimisé pour une utilisation professionnelle.
+            </p>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🧪 Données de Test</h2>
+        <p>Utilisez ces codes-barres pour tester l'application :</p>
+
+        <div class="test-data">
+            <div class="test-item">
+                <span><strong>Pain de campagne</strong></span>
+                <code>3760123450001</code>
+                <span>3.00 €</span>
+            </div>
+            <div class="test-item">
+                <span><strong>Lait demi-écrémé 1L</strong></span>
+                <code>3760123450002</code>
+                <span>1.20 €</span>
+            </div>
+            <div class="test-item">
+                <span><strong>Tomates grappe</strong></span>
+                <code>3760123450003</code>
+                <span>2.99 €</span>
+            </div>
+            <div class="test-item">
+                <span><strong>Poulet fermier</strong></span>
+                <code>3760123450004</code>
+                <span>12.00 €</span>
+            </div>
+            <div class="test-item">
+                <span><strong>Fromage comté</strong></span>
+                <code>3760123450005</code>
+                <span>9.00 €</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>⌨️ Raccourcis Clavier</h2>
+
+        <div class="shortcuts">
+            <div class="shortcut">
+                <span class="key">F1</span>
+                <span>Rechercher un article</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">F2</span>
+                <span>Appliquer une remise</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">F5</span>
+                <span>Paiement</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">ESC</span>
+                <span>Vider le panier</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">↵</span>
+                <span>Valider le scan</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🚀 Guide de Démarrage Rapide</h2>
+
+        <h3>1. Vérifier les serveurs</h3>
+        <div class="code-block">
+            # Terminal 1 - Django
+            venv\Scripts\python manage.py runserver
+
+            # Terminal 2 - Tailwind
+            venv\Scripts\python manage.py tailwind start
+        </div>
+
+        <h3>2. Accéder à l'application</h3>
+        <p>Ouvrir dans votre navigateur : <strong>http://127.0.0.1:8000/caisse/</strong></p>
+
+        <h3>3. Tester le scan</h3>
+        <ol>
+            <li>Cliquer dans la barre de recherche</li>
+            <li>Taper un code-barres (ex: <code>3760123450001</code>)</li>
+            <li>Appuyer sur Entrée</li>
+            <li>L'article apparaît dans le panier ✅</li>
+        </ol>
+
+        <h3>4. Finaliser une vente</h3>
+        <ol>
+            <li>Ajouter plusieurs articles au panier</li>
+            <li>Cliquer sur "Paiement" ou appuyer sur F5</li>
+            <li>Vérifier le ticket de caisse</li>
+            <li>Imprimer ou terminer la transaction</li>
+        </ol>
+    </div>
+
+    <div class="demo-section">
+        <h2>📸 Aperçu de l'Interface</h2>
+
+        <div class="screenshots">
+            <div class="screenshot">
+                <h4>Vue Principale - Panier Vide</h4>
+                <div class="screenshot-placeholder">
+                    Sidebar + Zone centrale + Récapitulatif<br>
+                    Message "Le panier est vide"
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <h4>Vue Principale - Avec Articles</h4>
+                <div class="screenshot-placeholder">
+                    Liste d'articles avec contrôles<br>
+                    Totaux calculés en temps réel
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <h4>Modal de Recherche</h4>
+                <div class="screenshot-placeholder">
+                    Champ de recherche + Résultats<br>
+                    Clic pour ajouter au panier
+                </div>
+            </div>
+
+            <div class="screenshot">
+                <h4>Ticket de Caisse</h4>
+                <div class="screenshot-placeholder">
+                    Facture complète avec détails<br>
+                    Boutons Imprimer et Terminer
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>✨ Fonctionnalités Principales</h2>
+
+        <ul style="line-height: 2;">
+            <li>✅ <strong>Scan de codes-barres</strong> : Direct ou via recherche</li>
+            <li>✅ <strong>Recherche d'articles</strong> : Par nom ou code-barres</li>
+            <li>✅ <strong>Gestion du panier</strong> : Ajouter, modifier, supprimer</li>
+            <li>✅ <strong>Calculs automatiques</strong> : HT, TVA, TTC en temps réel</li>
+            <li>✅ <strong>Contrôle des quantités</strong> : Boutons +/- intuitifs</li>
+            <li>✅ <strong>Ticket de caisse</strong> : Génération et impression</li>
+            <li>✅ <strong>Raccourcis clavier</strong> : Pour une utilisation rapide</li>
+            <li>✅ <strong>Interface moderne</strong> : Design professionnel et épuré</li>
+            <li>✅ <strong>Animations fluides</strong> : Transitions et effets visuels</li>
+            <li>✅ <strong>Responsive</strong> : Adapté aux écrans de caisse</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎯 Technologies Utilisées</h2>
+
+        <div class="features">
+            <div class="feature">
+                <h3>Frontend</h3>
+                <ul>
+                    <li>HTML5 sémantique</li>
+                    <li>Tailwind CSS</li>
+                    <li>CSS personnalisé</li>
+                    <li>JavaScript Vanilla</li>
+                </ul>
+            </div>
+
+            <div class="feature">
+                <h3>Backend</h3>
+                <ul>
+                    <li>Django 5.2</li>
+                    <li>PostgreSQL</li>
+                    <li>API REST</li>
+                    <li>Modèles de données</li>
+                </ul>
+            </div>
+
+            <div class="feature">
+                <h3>Design</h3>
+                <ul>
+                    <li>Police Inter</li>
+                    <li>Palette noir/gris</li>
+                    <li>Animations CSS</li>
+                    <li>UX optimisée</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 60px 0;">
+        <a href="http://127.0.0.1:8000/caisse/" class="cta">Lancer l'Application →</a>
+    </div>
+
+    <div
+        style="text-align: center; color: #6b7280; margin-top: 60px; padding-top: 40px; border-top: 1px solid #e5e7eb;">
+        <p>SuperMarket POS - Interface de Caisse Professionnelle</p>
+        <p style="font-size: 0.875rem;">Développé avec Django, Tailwind CSS et JavaScript</p>
+    </div>
+</body>
+
+</html>
