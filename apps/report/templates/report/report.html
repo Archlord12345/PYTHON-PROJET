@@ -264,21 +264,39 @@
     const dayCtx = document.getElementById('salesByDayChart');
     if (dayCtx) {
       new Chart(dayCtx, {
-        type: 'bar',
+        type: 'line',
         data: {
           labels: salesByDay.map((d) => d.label),
-          datasets: [{
-            data: salesByDay.map((d) => d.value),
-            backgroundColor: '#60a5fa',
-            borderRadius: 8,
-          }],
+          datasets: [
+            {
+              label: 'Ventes',
+              data: salesByDay.map((d) => d.value),
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.15)',
+              tension: 0.35,
+              fill: true,
+            },
+            {
+              label: 'Transactions',
+              data: salesByDay.map((d) => d.transactions),
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.12)',
+              tension: 0.35,
+              fill: false,
+              yAxisID: 'y1',
+            },
+          ],
         },
         options: {
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: { legend: { position: 'bottom' } },
           scales: {
             x: { grid: { display: false } },
             y: { grid: { color: '#e5e7eb' } },
+            y1: {
+              position: 'right',
+              grid: { drawOnChartArea: false },
+            },
           },
         },
       });
@@ -287,15 +305,13 @@
     const catCtx = document.getElementById('salesByCategoryChart');
     if (catCtx) {
       new Chart(catCtx, {
-        type: 'line',
+        type: 'bar',
         data: {
           labels: salesByCategory.map((d) => d.label),
           datasets: [{
             data: salesByCategory.map((d) => d.value),
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16, 185, 129, 0.15)',
-            tension: 0.35,
-            fill: true,
+            backgroundColor: '#3b82f6',
+            borderRadius: 8,
           }],
         },
         options: {

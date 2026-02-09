@@ -3,9 +3,10 @@ from decimal import Decimal, ROUND_HALF_UP
 import csv
 import io
 import json
+import calendar
 
 from django.db.models import Count, DecimalField, ExpressionWrapper, F, Sum, Value
-from django.db.models.functions import Coalesce, TruncDate
+from django.db.models.functions import Coalesce, TruncDate, TruncHour, TruncMonth
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
@@ -193,17 +194,86 @@ def report_view(request):
             }
         )
 
-    sales_by_day_qs = (
-        factures.annotate(day=TruncDate("date_facture"))
-        .values("day")
-        .annotate(total=Coalesce(Sum("montant_TTC"), Decimal("0")))
-        .order_by("day")
-    )
-    sales_by_day = [
-        {"label": row["day"].strftime("%d/%m"), "value": float(row["total"] or 0)}
-        for row in sales_by_day_qs
-        if row["day"]
-    ]
+    weekday_labels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
+    month_labels = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"]
+
+    if period == "day":
+        trunc = TruncHour("date_facture")
+        bucket_key = "hour"
+        sales_by_day_qs = (
+            factures.annotate(hour=trunc)
+            .values(bucket_key)
+            .annotate(
+                total=Coalesce(Sum("montant_TTC"), Decimal("0")),
+                transactions=Coalesce(Count("id"), 0),
+            )
+            .order_by(bucket_key)
+        )
+        start_hour = start.replace(minute=0, second=0, microsecond=0)
+        end_hour = end.replace(minute=0, second=0, microsecond=0)
+        buckets = []
+        cur = start_hour
+        while cur <= end_hour:
+            buckets.append(cur)
+            cur += timedelta(hours=1)
+        def _label(bucket):
+            return bucket.strftime("%Hh")
+    elif period == "year":
+        trunc = TruncMonth("date_facture")
+        bucket_key = "month"
+        sales_by_day_qs = (
+            factures.annotate(month=trunc)
+            .values(bucket_key)
+            .annotate(
+                total=Coalesce(Sum("montant_TTC"), Decimal("0")),
+                transactions=Coalesce(Count("id"), 0),
+            )
+            .order_by(bucket_key)
+        )
+        buckets = [start.replace(month=m, day=1, hour=0, minute=0, second=0, microsecond=0) for m in range(1, 13)]
+        def _label(bucket):
+            return month_labels[bucket.month - 1]
+    else:
+        trunc = TruncDate("date_facture")
+        bucket_key = "day"
+        sales_by_day_qs = (
+            factures.annotate(day=trunc)
+            .values(bucket_key)
+            .annotate(
+                total=Coalesce(Sum("montant_TTC"), Decimal("0")),
+                transactions=Coalesce(Count("id"), 0),
+            )
+            .order_by(bucket_key)
+        )
+        if period == "week":
+            buckets = [start + timedelta(days=i) for i in range(7)]
+            def _label(bucket):
+                return weekday_labels[bucket.weekday()]
+        elif period == "month":
+            days_in_month = calendar.monthrange(start.year, start.month)[1]
+            buckets = [start.replace(day=1) + timedelta(days=i) for i in range(days_in_month)]
+            def _label(bucket):
+                return str(bucket.day).zfill(2)
+        else:
+            buckets = []
+            cur = start
+            while cur <= end:
+                buckets.append(cur)
+                cur += timedelta(days=1)
+            def _label(bucket):
+                return bucket.strftime("%d/%m")
+
+    rows_by_bucket = {row[bucket_key]: row for row in sales_by_day_qs if row[bucket_key]}
+    sales_by_day = []
+    for bucket in buckets:
+        row = rows_by_bucket.get(bucket)
+        sales_by_day.append(
+            {
+                "label": _label(bucket),
+                "value": float(row["total"] or 0) if row else 0.0,
+                "transactions": int(row["transactions"] or 0) if row else 0,
+            }
+        )
 
     sales_by_category_qs = (
         details.values("article__categorie")
