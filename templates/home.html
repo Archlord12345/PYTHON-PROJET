@@ -1,33 +1,153 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Accueil - Facturation</title>
-        {% tailwind_css %}
-    </head>
-    <body class="bg-gray-100">
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenue sur votre application de facturation</h1>
-                <p class="text-gray-600 mb-6">Gérez facilement vos factures, clients et produits.</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Supermarché - Accueil</title>
+    {% tailwind_css %}
+    <!-- Importation d'une police moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <!-- BARRE DE NAVIGATION (NAVBAR) -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-blue-700">Factures</h2>
-                        <p class="text-gray-600">Créez et gérez vos factures en quelques clics</p>
+                <!-- Logo et Nom du Supermarché -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <div class="bg-blue-600 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-gray-900 tracking-tight">SUPER-MARKET</span>
                     </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-green-700">Clients</h2>
-                        <p class="text-gray-600">Gérez votre base de données clients</p>
-                    </div>
-                    <div class="bg-purple-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-purple-700">Produits</h2>
-                        <p class="text-gray-600">Gérez votre catalogue de produits</p>
-                    </div>
+                </div>
+
+                <!-- Section Profil / Connexion -->
+                <div class="flex items-center gap-4">
+                    {% if user.is_authenticated %}
+                        <!-- Infos Profil si connecté -->
+                        <div class="hidden md:flex flex-col text-right mr-2">
+                            <span class="text-sm font-semibold text-gray-700">{{ user.username }}</span>
+                            <span class="text-xs text-green-600 font-medium italic">En ligne - Admin</span>
+                        </div>
+                        <!-- Avatar -->
+                        <div class="h-10 w-10 rounded-full bg-blue-100 border-2 border-blue-200 flex items-center justify-center text-blue-600 font-bold">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        <!-- Bouton Déconnexion (Lien mis en # pour éviter l'erreur NoReverseMatch) -->
+                        <a href="#" class="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors" title="Déconnexion">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                        </a>
+                    {% else %}
+                        <!-- Bouton Connexion (Lien mis en # pour éviter l'erreur NoReverseMatch) -->
+                        <a href="#" class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md transition">
+                            Connexion
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </body>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- EN-TETE DE BIENVENUE -->
+        <div class="mb-10">
+            <h1 class="text-3xl font-extrabold text-gray-900">Tableau de Bord</h1>
+            <p class="mt-2 text-gray-600 italic font-medium">Gérez votre point de vente, vos stocks et vos clients en toute simplicité.</p>
+        </div>
+
+        <!-- GRILLE DES FONCTIONNALITES (ICONES & CARTES) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Carte 1 : Caisse / Ventes -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all group border-b-4 border-b-blue-500">
+                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-5 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Caisse & Ventes</h3>
+                <p class="text-sm text-gray-500 mt-2">Émettez des tickets de caisse et factures pour vos clients.</p>
+                <div class="mt-6 flex items-center text-blue-600 font-bold text-sm uppercase tracking-wider cursor-pointer group-hover:translate-x-2 transition-transform">
+                    Ouvrir la caisse <span class="ml-2">&rarr;</span>
+                </div>
+            </div>
+
+            <!-- Carte 2 : Inventaire -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all group border-b-4 border-b-orange-500">
+                <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 mb-5 group-hover:bg-orange-600 group-hover:text-white transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Stocks</h3>
+                <p class="text-sm text-gray-500 mt-2">Gérez vos rayons, prix d'achat/vente et alertes de rupture.</p>
+                <div class="mt-6 flex items-center text-orange-600 font-bold text-sm uppercase tracking-wider cursor-pointer group-hover:translate-x-2 transition-transform">
+                    Inventaire <span class="ml-2">&rarr;</span>
+                </div>
+            </div>
+
+            <!-- Carte 3 : Clients -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all group border-b-4 border-b-green-500">
+                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-5 group-hover:bg-green-600 group-hover:text-white transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Clients</h3>
+                <p class="text-sm text-gray-500 mt-2">Fichiers clients, fidélité et historique des règlements.</p>
+                <div class="mt-6 flex items-center text-green-600 font-bold text-sm uppercase tracking-wider cursor-pointer group-hover:translate-x-2 transition-transform">
+                    Annuaire <span class="ml-2">&rarr;</span>
+                </div>
+            </div>
+
+            <!-- Carte 4 : Rapports -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all group border-b-4 border-b-purple-500">
+                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-5 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Analyses</h3>
+                <p class="text-sm text-gray-500 mt-2">Suivi du chiffre d'affaires, marges et bénéfices du jour.</p>
+                <div class="mt-6 flex items-center text-purple-600 font-bold text-sm uppercase tracking-wider cursor-pointer group-hover:translate-x-2 transition-transform">
+                    Rapports <span class="ml-2">&rarr;</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECTION ASSISTANCE / SUPPORT -->
+        <div class="mt-12 bg-gradient-to-r from-blue-700 to-indigo-800 rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold italic">Besoin d'aide technique ?</h2>
+                    <p class="opacity-80 mt-2 text-lg italic">Support dédié pour votre logiciel de facturation.</p>
+                </div>
+                <button class="px-8 py-4 bg-white text-blue-700 font-extrabold rounded-2xl hover:bg-gray-100 transition-colors shadow-xl">
+                    Contacter l'administrateur
+                </button>
+            </div>
+            <!-- Décoration en arrière-plan -->
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 bg-white opacity-10 w-40 h-40 rounded-full"></div>
+        </div>
+    </main>
+
+    <footer class="text-center py-10 text-gray-400 text-sm italic font-medium">
+        &copy; 2025 SUPER-MARKET POS System | Propulsé par Python Django
+    </footer>
+
+</body>
 </html>

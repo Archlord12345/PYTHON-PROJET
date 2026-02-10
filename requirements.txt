@@ -6,9 +6,9 @@ chardet==5.2.0
 charset-normalizer==3.4.4
 click==8.3.1
 cookiecutter==2.6.0
-Django==6.0.1
+Django>=5.0
 django-browser-reload==1.21.0
-django-tailwind==4.4.2
+django-tailwind==4.2.0
 idna==3.11
 Jinja2==3.1.6
 markdown-it-py==4.0.0
@@ -17,7 +17,7 @@ mdurl==0.1.2
 psycopg==3.3.2
 psycopg-binary==3.3.2
 Pygments==2.19.2
-pytailwindcss==0.3.0
+pytailwindcss==0.2.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-slugify==8.0.4
