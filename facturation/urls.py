@@ -17,16 +17,35 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render
+from apps.authentification import views
 
+# Vue pour la page d'accueil
 def home_view(request):
     return render(request, 'home.html')
+
+# vue pour la sélection du profil de connexion
+def selection_profil_view(request):
+    return render(request, 'selection_profil.html')
+
+# Importer les vues de l'application d'authentification
+def client_signup(request):
+    return render(request, 'authentification/client_signup.html')
+# Vue pour la page de connexion du client
+def client_signin(request):
+    return render(request, 'authentification/client_signin.html')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
+    # =======================================================================
+    path('selection-profil/', selection_profil_view, name='selection_profil'),
+    path('client/inscription/', views.client_signup, name='client_signup'),
+    path('client/connexion/', views.client_signin, name='client_signin'),
+
     # Tailwind development server
     path("__reload__/", include("django_browser_reload.urls")),
-    #apps urls
+    
+    # Apps urls
     path('audit_journal/', include('apps.audit_journal.urls')),
     path('checkout/', include('apps.checkout.urls')),
     path('dashboard/', include('apps.dashboard.urls')),

@@ -1,0 +1,82 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte Client - SUPER-MARKET</title>
+    {% tailwind_css %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- NAVBAR IDENTIQUE -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <div class="bg-blue-600 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-gray-900 tracking-tight">SUPER-MARKET</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="/" class="text-sm font-medium text-gray-500 hover:text-blue-600 transition">
+                        &larr; Retour à l'accueil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="max-w-7xl mx-auto px-4 py-16 flex justify-center">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold text-gray-900">Rejoignez-nous</h2>
+                    <p class="text-gray-500 mt-2 italic font-medium">Créez votre compte client en quelques secondes.</p>
+                </div>
+
+                <form action="#" method="POST" class="space-y-5">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nom complet</label>
+                        <input type="text" placeholder="Ex: Jean Dupont" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                        <input type="email" placeholder="client@email.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Téléphone</label>
+                        <input type="tel" placeholder="+237 ..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Mot de passe</label>
+                        <input type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    
+                    <button type="submit" class="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg transition duration-200">
+                        Créer mon compte
+                    </button>
+                </form>
+
+                <div class="mt-8 text-center border-t border-gray-100 pt-6">
+                    <p class="text-gray-600 text-sm italic font-medium">Déjà inscrit ? <a href="{% url 'client_signin' %}" class="text-blue-600 font-bold hover:underline">Connectez-vous ici</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-10 text-gray-400 text-sm italic font-medium">
+        &copy; 2025 SUPER-MARKET POS System | Propulsé par Python Django
+    </footer>
+    
+</body>
+</html>
