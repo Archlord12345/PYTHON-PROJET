@@ -87,11 +87,60 @@
         .empty-cart-icon {
             color: #cbd5e1;
         }
+
+        /* --- LOGIQUE D'IMPRESSION (Ticket de Caisse) --- 
+           Cette section CSS s'active uniquement lors de l'impression.
+           Elle cache l'interface pour ne garder que le ticket blanc.
+        */
+        @media print {
+
+            /* On cache tout ce qui n'est pas le ticket */
+            body * {
+                visibility: hidden;
+            }
+
+            /* On affiche uniquement la zone du ticket (Receipt Modal) */
+            #receiptModal,
+            #receiptModal * {
+                visibility: visible;
+            }
+
+            /* Positionnement du ticket sur la page imprimée */
+            #receiptModal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+            }
+
+            /* Nettoyage visuel pour l'imprimante (pas d'ombres, pas de flou) */
+            .modal-overlay {
+                background: white !important;
+                backdrop-filter: none !important;
+            }
+
+            .modal-content {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            /* On masque les boutons d'action (Imprimer/Terminer) sur le papier */
+            #receiptModal button,
+            #receiptModal .border-t.flex.gap-3 {
+                display: none !important;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
 
 <body class="bg-gray-50">
+    <!-- Jeton de sécurité CSRF : Obligatoire pour que Django accepte l'enregistrement des factures.
+         Ce tag génère un champ caché que le JavaScript récupère avant d'envoyer les données au serveur. -->
+    {% csrf_token %}
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <aside class="sidebar w-52 flex-shrink-0 border-r border-gray-200">
@@ -259,7 +308,7 @@
         </div>
     </div>
 
-    
+
     <div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
@@ -310,7 +359,7 @@
                     </div>
 
                     <div id="receiptItems" class="text-left space-y-2 mb-6">
-                        
+
                     </div>
 
                     <div class="border-t border-gray-200 pt-4 space-y-2 text-sm">

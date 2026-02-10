@@ -28,22 +28,26 @@ function setupEventListeners() {
     }, 300));
 }
 
-// Keyboard shortcuts
+// --- GESTION DES RACCOURCIS CLAVIER ---
+/**
+ * Configure les touches Rapides pour améliorer la productivité du caissier.
+ * F1: Recherche rapide | F5: Passer au paiement | ESC: Annuler/Fermer
+ */
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', function (e) {
-        // F1 - Search
+        // F1 - Ouvre la recherche d'articles
         if (e.key === 'F1') {
             e.preventDefault();
             openSearchModal();
         }
-        // F5 - Payment
+        // F5 - Ouvre la fenêtre de paiement si le panier n'est pas vide
         else if (e.key === 'F5') {
             e.preventDefault();
             if (cart.length > 0) {
                 openPaymentModal();
             }
         }
-        // ESC - Clear cart
+        // ESC - Gestion de la fermeture des fenêtres ou vidage du panier
         else if (e.key === 'Escape') {
             if (!document.getElementById('searchModal').classList.contains('hidden')) {
                 closeSearchModal();
@@ -58,26 +62,36 @@ function setupKeyboardShortcuts() {
     });
 }
 
-// Search articles by barcode (direct scan)
+// --- COMMUNICATIONS AVEC LE SERVEUR (API) ---
+
+/**
+ * Récupère le jeton CSRF nécessaire pour sécuriser les requêtes POST vers Django.
+ * Sans ce jeton, le serveur rejettera toute tentative d'enregistrement par sécurité.
+ */
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+/**
+ * Recherche un article par son code-barres via l'API Django.
+ * Utilisé lors d'un scan direct ou d'une saisie manuelle rapide.
+ */
 function searchArticleByBarcode(barcode) {
     if (!barcode) return;
 
-    // Mock data - Replace with actual API call
-    const mockArticles = [
-        { id: 1, nom: 'Pain de campagne', code_barres: '3760123450001', prix_ttc: 3.00, prix_ht: 2.84, stock: 49 },
-        { id: 2, nom: 'Lait demi-écrémé 1L', code_barres: '3760123450002', prix_ttc: 1.20, prix_ht: 1.13, stock: 100 },
-        { id: 3, nom: 'Tomates grappe', code_barres: '3760123450003', prix_ttc: 2.99, prix_ht: 2.83, stock: 75 },
-        { id: 4, nom: 'Poulet fermier', code_barres: '3760123450004', prix_ttc: 12.00, prix_ht: 11.32, stock: 30 },
-        { id: 5, nom: 'Fromage comté', code_barres: '3760123450005', prix_ttc: 9.00, prix_ht: 8.49, stock: 45 }
-    ];
-
-    const article = mockArticles.find(a => a.code_barres === barcode);
-
-    if (article) {
-        addToCart(article);
-    } else {
-        alert('Article non trouvé');
-    }
+    // Appel asynchrone au backend
+    fetch(`/caisse/api/search/?q=${barcode}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.articles && data.articles.length > 0) {
+                // On prend le premier article correspondant trouvé en base de données
+                const article = data.articles[0];
+                addToCart(article);
+            } else {
+                alert('Article non trouvé dans la base de données');
+            }
+        })
+        .catch(error => console.error('Erreur lors de la recherche:', error));
 }
 
 // Search articles (modal)
@@ -87,21 +101,12 @@ function searchArticles(query) {
         return;
     }
 
-    // Mock data - Replace with actual API call
-    const mockArticles = [
-        { id: 1, nom: 'Pain de campagne', code_barres: '3760123450001', prix_ttc: 3.00, prix_ht: 2.84, stock: 49 },
-        { id: 2, nom: 'Lait demi-écrémé 1L', code_barres: '3760123450002', prix_ttc: 1.20, prix_ht: 1.13, stock: 100 },
-        { id: 3, nom: 'Tomates grappe', code_barres: '3760123450003', prix_ttc: 2.99, prix_ht: 2.83, stock: 75 },
-        { id: 4, nom: 'Poulet fermier', code_barres: '3760123450004', prix_ttc: 12.00, prix_ht: 11.32, stock: 30 },
-        { id: 5, nom: 'Fromage comté', code_barres: '3760123450005', prix_ttc: 9.00, prix_ht: 8.49, stock: 45 }
-    ];
-
-    const results = mockArticles.filter(a =>
-        a.nom.toLowerCase().includes(query.toLowerCase()) ||
-        a.code_barres.includes(query)
-    );
-
-    displaySearchResults(results);
+    fetch(`/caisse/api/search/?q=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            displaySearchResults(data.articles);
+        })
+        .catch(error => console.error('Erreur:', error));
 }
 
 // Display search results
@@ -312,12 +317,50 @@ function printReceipt() {
     window.print();
 }
 
+/**
+ * ACTION FINALE : Enregistrement de la vente.
+ * Envoie le contenu du panier au serveur pour créer une Facture officielle
+ * et mettre à jour les stocks en base de données.
+ */
 function finishTransaction() {
-    // Here you would send the transaction to the server
-    // For now, just clear the cart and close the modal
-    clearCart();
-    closeReceiptModal();
-    alert('Transaction terminée avec succès !');
+    // Sécurité : ne rien faire si le panier est vide
+    if (cart.length === 0) return;
+
+    // Préparation des données pour le serveur
+    const data = {
+        items: cart.map(item => ({
+            article_id: item.article_id,
+            quantite: item.quantite,
+            prix_unitaire: item.prix_unitaire,
+            total: item.total
+        }))
+    };
+
+    // Envoi de la requête POST au serveur Django
+    fetch('/caisse/api/facture/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken() // Protection contre les attaques CSRF
+        },
+        body: JSON.stringify(data) // Conversion de l'objet JS en texte (JSON)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Si le serveur confirme l'enregistrement (Code 200)
+                alert(`Transaction terminée avec succès !\nNuméro de Facture : ${data.numero_facture}`);
+                clearCart();         // Vide le panier
+                closeReceiptModal(); // Ferme la fenêtre
+            } else {
+                // Si le serveur renvoie une erreur (ex: rupture de stock)
+                alert('Erreur serveur lors de la création de la facture : ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur fatale:', error);
+            alert('Impossible de contacter le serveur. Vérifiez votre connexion.');
+        });
 }
 
 // Utility functions
