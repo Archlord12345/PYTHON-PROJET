@@ -260,7 +260,7 @@
     </div>
 
     <!-- Search Modal -->
-    <div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
+    <div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
                 <div class="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -300,8 +300,54 @@
         </div>
     </div>
 
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="hidden fixed inset-0 z-50 modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-900">Paiement</h3>
+                    <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="p-6">
+                    <div class="bg-blue-50 rounded-lg p-6 text-center mb-6">
+                        <p class="text-sm text-gray-600 mb-2">Montant à payer</p>
+                        <p class="text-4xl font-bold text-blue-600" id="paymentAmount">0.00 €</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-900 mb-2">Mode de paiement</label>
+                        <select id="paymentMethod" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            <option value="carte_bancaire">Carte bancaire</option>
+                            <option value="especes">Espèces</option>
+                            <option value="cheque">Chèque</option>
+                            <option value="virement">Virement</option>
+                            <option value="ticket_restaurant">Ticket restaurant</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-gray-200 flex gap-3">
+                    <button onclick="closePaymentModal()"
+                        class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                        Annuler
+                    </button>
+                    <button onclick="validatePayment()"
+                        class="flex-1 btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                        Valider le paiement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Receipt Modal -->
-    <div id="receiptModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
+    <div id="receiptModal" class="hidden fixed inset-0 z-50 modal-overlay">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full">
                 <div class="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -345,7 +391,7 @@
 
                     <div class="mt-6 pt-4 border-t border-gray-200">
                         <p class="text-sm text-gray-600">Mode de paiement</p>
-                        <p class="font-medium">Ticket Restaurant</p>
+                        <p class="font-medium" id="receiptPaymentMethod">Carte bancaire</p>
                     </div>
 
                     <p class="mt-6 text-sm text-gray-500">Merci de votre visite !</p>
@@ -378,7 +424,19 @@
         function openSearchModal() {
             document.getElementById('searchModal').classList.remove('hidden');
             document.getElementById('modalSearchInput').focus();
-            renderProducts(products);
+            document.getElementById('modalSearchInput').value = '';
+            
+            // Charger tous les articles au démarrage
+            fetch('/caisse/api/search/')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('searchResults').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des articles:', error);
+                    document.getElementById('searchResults').innerHTML = 
+                        '<p class="text-center text-red-500 py-8">Erreur lors du chargement</p>';
+                });
         }
 
         // Fermer le modal de recherche
@@ -390,11 +448,6 @@
         // Filtrer les produits
         function filterProducts() {
             const searchTerm = document.getElementById('modalSearchInput').value.trim();
-            
-            if (searchTerm.length < 2) {
-                renderProducts(products);
-                return;
-            }
             
             // Faire une requête GET à search_articles
             fetch(`/caisse/api/search/?q=${encodeURIComponent(searchTerm)}`)
@@ -572,9 +625,9 @@
             const totalTTC = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' €';
-            document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' €';
-            document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' €';
+            document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' Franc';
+            document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' Franc';
+            document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' Franc';
             document.getElementById('itemCount').textContent = itemCount;
 
             // Activer/désactiver le bouton de paiement
@@ -594,26 +647,165 @@
             }
         }
 
-        // Ouvrir le modal de paiement (placeholder)
+        // Ouvrir le modal de paiement
         function openPaymentModal() {
-            alert('Modal de paiement - À implémenter');
+            if (cart.length === 0) return;
+            
+            const totalTTC = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('paymentAmount').textContent = totalTTC.toFixed(2) + ' Franc';
+            document.getElementById('paymentMethod').value = 'carte_bancaire';
+            document.getElementById('paymentModal').classList.remove('hidden');
         }
 
-        // Fermer le modal de reçu (placeholder)
+        // Fermer le modal de paiement
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        // Valider le paiement
+        function validatePayment() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const paymentMethodLabel = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
+            
+            // Préparer les données pour la facture
+            const totalHT = cart.reduce((sum, item) => sum + (item.price * item.quantity / 1.055), 0);
+            const totalTTC = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalTVA = totalTTC - totalHT;
+            
+            // Générer numéro de facture
+            const facureNumber = 'FAC-' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+            
+            // Mettre à jour le ticket
+            document.getElementById('receiptNumber').textContent = facureNumber;
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR');
+            document.getElementById('receiptDate').textContent = dateStr;
+            
+            // Afficher les articles
+            const receiptItems = document.getElementById('receiptItems');
+            receiptItems.innerHTML = cart.map(item => `
+                <div class="flex justify-between text-sm">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span class="font-medium">${(item.price * item.quantity).toFixed(2)} Franc</span>
+                </div>
+            `).join('');
+            
+            // Mettre à jour les totaux
+            document.getElementById('receiptHT').textContent = totalHT.toFixed(2) + ' Franc';
+            document.getElementById('receiptTVA').textContent = totalTVA.toFixed(2) + ' Franc';
+            document.getElementById('receiptTTC').textContent = totalTTC.toFixed(2) + ' Franc';
+            document.getElementById('receiptPaymentMethod').textContent = paymentMethodLabel;
+            
+            // Fermer le modal de paiement et ouvrir le ticket
+            closePaymentModal();
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        // Fermer le modal de reçu
         function closeReceiptModal() {
             document.getElementById('receiptModal').classList.add('hidden');
         }
 
-        // Imprimer le reçu (placeholder)
+        // Imprimer le reçu
         function printReceipt() {
             window.print();
         }
 
-        // Terminer la transaction (placeholder)
+        // Terminer la transaction
         function finishTransaction() {
-            cart = [];
-            updateCart();
-            closeReceiptModal();
+            // Préparer les données du panier au format attendu par create_facture
+            const articleData = cart.map(item => ({
+                id: item.id,
+                quantite: item.quantity,
+                prix_TTC: item.price
+            }));
+
+            console.log('Données envoyées:', articleData);
+            console.log('Token CSRF:', getCookie('csrftoken'));
+
+            // Afficher un indicateur de chargement
+            const finishBtn = event.target;
+            const originalText = finishBtn.textContent;
+            finishBtn.disabled = true;
+            finishBtn.textContent = 'Traitement...';
+
+            // Envoyer la requête POST au serveur
+            fetch('/caisse/api/facture/create/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(articleData)
+            })
+            .then(response => {
+                console.log('Status:', response.status);
+                console.log('Content-Type:', response.headers.get('content-type'));
+                
+                // Lire la réponse comme texte d'abord
+                return response.text().then(text => {
+                    console.log('Réponse brute:', text);
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Erreur de parsing JSON:', e);
+                        console.error('Texte reçu:', text);
+                        throw new Error('Réponse invalide du serveur: ' + text.substring(0, 200));
+                    }
+                });
+            })
+            .then(data => {
+                if (data.success) {
+                    // Mettre à jour le numéro de facture avec la réponse du serveur
+                    document.getElementById('receiptNumber').textContent = data.numero_facture || 'FAC-' + data.facture_id;
+                    
+                    // Afficher un message de succès
+                    const receiptModal = document.getElementById('receiptModal');
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'bg-green-50 border-b border-green-200 p-4 text-center';
+                    successMessage.innerHTML = `
+                        <svg class="w-8 h-8 text-green-600 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <p class="text-green-800 font-semibold text-sm">Facture créée avec succès !</p>
+                    `;
+                    receiptModal.querySelector('.modal-content').insertBefore(successMessage, receiptModal.querySelector('.modal-content').firstChild);
+                    
+                    // Vider le panier après 3 secondes
+                    setTimeout(() => {
+                        cart = [];
+                        updateCart();
+                        closeReceiptModal();
+                        successMessage.remove();
+                        finishBtn.disabled = false;
+                        finishBtn.textContent = originalText;
+                    }, 3000);
+                } else {
+                    throw new Error(data.error || 'Erreur lors de la création de la facture');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur complète:', error);
+                finishBtn.disabled = false;
+                finishBtn.textContent = originalText;
+                alert('Erreur: ' + error.message);
+            });
+        }
+
+        // Fonction pour obtenir le token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
         }
 
         // Raccourcis clavier

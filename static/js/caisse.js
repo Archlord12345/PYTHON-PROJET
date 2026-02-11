@@ -211,9 +211,9 @@ function updateCart() {
     cartTitle.textContent = `Panier (${totalItems} article${totalItems > 1 ? 's' : ''})`;
 
     // Update totals
-    document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' €';
-    document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' €';
-    document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' €';
+    document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' Franc';
+    document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' Franc';
+    document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' Franc';
     document.getElementById('itemCount').textContent = totalItems;
 
     // Enable/disable payment button
