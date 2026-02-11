@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Articles{% endblock %}
+
+{% block content %}
+<div class="min-h-screen">
+    <div class="p-8 space-y-8">
+        <!-- En-tête -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-2 text-slate-900 dark:text-zinc-100">Dashboard Articles</h1>
+            <p class="text-slate-500 dark:text-zinc-400">Vue d'ensemble de votre catalogue</p>
+        </div>
+
+        <!-- Cartes de statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total articles -->
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <p class="text-slate-500 dark:text-zinc-400 text-sm mb-2">Total articles</p>
+                <p class="text-4xl font-bold text-slate-900 dark:text-zinc-100">{{ stats.total_articles }}</p>
+                <p class="text-green-400 text-xs mt-2">
+                    {{ stats.articles_actifs }} actifs
+                </p>
+            </div>
+
+            <!-- Stock total -->
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <p class="text-slate-500 dark:text-zinc-400 text-sm mb-2">Stock total</p>
+                <p class="text-4xl font-bold text-slate-900 dark:text-zinc-100">{{ stats.stock_total }}</p>
+                <p class="text-blue-400 text-xs mt-2">
+                    Valeur: {{ stats.valeur_stock|floatformat:2 }}€
+                </p>
+            </div>
+
+            <!-- Articles en rupture -->
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <p class="text-slate-500 dark:text-zinc-400 text-sm mb-2">Rupture de stock</p>
+                <p class="text-4xl font-bold text-red-400">{{ stats.articles_rupture }}</p>
+                <p class="text-yellow-400 text-xs mt-2">
+                    {{ stats.articles_stock_faible }} en stock faible
+                </p>
+            </div>
+
+            <!-- Prix moyen -->
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <p class="text-slate-500 dark:text-zinc-400 text-sm mb-2">Prix moyen HT</p>
+                <p class="text-4xl font-bold text-slate-900 dark:text-zinc-100">{{ stats.prix_moyen|floatformat:2 }}€</p>
+                <p class="text-purple-400 text-xs mt-2">
+                    Tous les articles actifs
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Répartition par catégorie -->
+            <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <h2 class="text-xl font-bold mb-6 text-slate-900 dark:text-zinc-100">Articles par catégorie</h2>
+                <div class="space-y-4">
+                    {% for cat in stats.par_categorie %}
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-slate-700 dark:text-zinc-300">{{ cat.label }}</span>
+                            <span class="font-semibold text-slate-900 dark:text-zinc-100">{{ cat.count }}</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-zinc-800 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full category-bar" 
+                                 data-count="{{ cat.count }}"
+                                 data-total="{{ stats.total_articles }}"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-slate-500 dark:text-zinc-400">Aucune catégorie</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Alertes stock -->
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+                <h2 class="text-xl font-bold mb-6 text-slate-900 dark:text-zinc-100">Alertes stock</h2>
+                {% if low_stock_articles %}
+                    <div class="space-y-4">
+                        {% for article in low_stock_articles %}
+                        <div class="border rounded-xl p-4 bg-amber-50 border-amber-200 dark:bg-amber-900/10 dark:border-amber-900/40">
+                            <p class="font-semibold text-sm text-slate-900 dark:text-zinc-100">{{ article.nom }}</p>
+                            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                                Stock: <span class="text-amber-700 dark:text-amber-400">{{ article.stock_actuel }}/{{ article.stock_minimum }}</span>
+                            </p>
+                            <a href="{% url 'articles:editer_article' article.id %}"
+                               class="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
+                                Éditer →
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-slate-500 dark:text-zinc-400 text-sm">✓ Tous les stocks sont normaux</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="mt-8 flex gap-4 flex-wrap">
+            <a href="{% url 'articles:liste_articles' %}"
+               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm font-medium text-white">
+                Voir la liste
+            </a>
+            <a href="{% url 'articles:creer_article' %}"
+               class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition text-sm font-medium text-white">
+                Nouvel article
+            </a>
+            <a href="{% url 'articles:importer_articles' %}"
+               class="px-4 py-2 rounded-lg transition border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">
+                Importer
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Calculer la largeur des barres de catégories
+    document.querySelectorAll('.category-bar').forEach(bar => {
+        const count = parseInt(bar.dataset.count);
+        const total = parseInt(bar.dataset.total);
+        const percentage = total > 0 ? (count / total * 100) : 0;
+        bar.style.width = percentage + '%';
+    });
+</script>
+{% endblock %}

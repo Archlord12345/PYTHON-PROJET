@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.caisse',
     'apps.phone',
     'apps.report',
+    'apps.articles',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +93,7 @@ DATABASES = {
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
-        'PORT': config('PORT')
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 

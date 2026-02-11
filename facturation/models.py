@@ -37,6 +37,26 @@ class Utilisateur(models.Model):
 
 
 class Article(models.Model):
+    CATEGORIE_CHOICES = [
+        ("boulangerie", "Boulangerie"),
+        ("produits_laitiers", "Produits laitiers"),
+        ("fruits_legumes", "Fruits et legumes"),
+        ("viande", "Viande"),
+        ("epicerie", "Epicerie"),
+        ("boissons", "Boissons"),
+        ("alimentaire", "Alimentaire"),
+        ("hygiene", "Hygiene"),
+    ]
+    UNITE_MESURE_CHOICES = [
+        ("unite", "Unite"),
+        ("kg", "Kg"),
+        ("litre", "Litre"),
+        ("piece", "Piece"),
+        ("sachet", "Sachet"),
+        ("bouteille", "Bouteille"),
+        ("sac", "Sac"),
+    ]
+
     code_barres = models.CharField(max_length=50, unique=True)
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
@@ -48,14 +68,64 @@ class Article(models.Model):
         default=0,
         help_text="Taux en décimal (ex: 0.18 pour 18%)",
     )
-    categorie = models.CharField(max_length=100, blank=True, null=True)
-    unite_mesure = models.CharField(max_length=50, blank=True, null=True)
+    categorie = models.CharField(
+        max_length=100,
+        choices=CATEGORIE_CHOICES,
+        default="epicerie",
+        blank=True,
+        null=True,
+    )
+    unite_mesure = models.CharField(
+        max_length=50,
+        choices=UNITE_MESURE_CHOICES,
+        default="unite",
+        blank=True,
+        null=True,
+    )
     stock_actuel = models.PositiveIntegerField(default=0)
     stock_minimum = models.PositiveIntegerField(default=0)
     actif = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nom
+
+    @property
+    def prix_ht(self):
+        return self.prix_HT
+
+    @prix_ht.setter
+    def prix_ht(self, value):
+        self.prix_HT = value
+
+    @property
+    def prix_ttc(self):
+        return self.prix_TTC
+
+    @prix_ttc.setter
+    def prix_ttc(self, value):
+        self.prix_TTC = value
+
+    @property
+    def taux_tva(self):
+        # Compatibilite module articles: expose en pourcentage.
+        return float(self.taux_TVA) * 100
+
+    @taux_tva.setter
+    def taux_tva(self, value):
+        self.taux_TVA = float(value) / 100
+
+    def is_low_stock(self):
+        return self.stock_actuel <= self.stock_minimum
+
+    def is_out_of_stock(self):
+        return self.stock_actuel == 0
+
+    def get_stock_status(self):
+        if self.stock_actuel == 0:
+            return "rupture"
+        if self.stock_actuel <= self.stock_minimum:
+            return "faible"
+        return "ok"
 
 
 class Facture(models.Model):

@@ -30,7 +30,7 @@ def sidebar_context(request):
         {
             'id': 'articles',
             'label': 'Articles',
-            'url': '/gestionnaire/',
+            'url': '/articles/',
             'icon': 'inventory_2',
         },
         {

@@ -280,8 +280,12 @@ def report_view(request):
         .annotate(total=Coalesce(Sum("total_ligne"), Decimal("0")))
         .order_by("article__categorie")
     )
+    category_labels = dict(Article.CATEGORIE_CHOICES)
     sales_by_category = [
-        {"label": row["article__categorie"] or "Autres", "value": float(row["total"] or 0)}
+        {
+            "label": category_labels.get(row["article__categorie"], row["article__categorie"] or "Autres"),
+            "value": float(row["total"] or 0),
+        }
         for row in sales_by_category_qs
     ]
 

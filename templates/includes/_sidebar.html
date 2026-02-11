@@ -7,7 +7,7 @@
       <button
         type="button"
         data-sidebar-toggle
-        class="inline-flex items-center justify-center w-8 h-8 rounded-md border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+        class="inline-flex items-center justify-center w-8 h-8 rounded-md border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
         aria-label="Réduire le menu"
       >
         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
@@ -27,9 +27,9 @@
     {% for item in sidebar_items %}
       <a
         href="{{ item.url }}"
-        class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all {% if item.is_active %}bg-slate-200/80 text-slate-900 shadow-sm{% else %}text-slate-700 hover:bg-slate-100{% endif %}"
+        class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all {% if item.is_active %}bg-slate-200/80 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-sm{% else %}text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800{% endif %}"
       >
-        <span class="material-symbols-outlined text-[20px] text-slate-700">{{ item.icon }}</span>
+        <span class="material-symbols-outlined text-[20px] text-slate-700 dark:text-zinc-300">{{ item.icon }}</span>
         <span data-sidebar-label>{{ item.label }}</span>
       </a>
     {% endfor %}
@@ -51,7 +51,7 @@
     {% if user.is_authenticated %}
     <a
       href="{{ logout_url }}"
-      class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-all"
+      class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg border border-slate-200 dark:border-zinc-700 transition-all"
     >
       <span class="material-symbols-outlined text-[20px]">logout</span>
       <span data-sidebar-label>Déconnexion</span>

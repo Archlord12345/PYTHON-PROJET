@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 rounded-2xl p-8 max-w-md border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+        <h2 class="text-2xl font-bold mb-4 text-slate-900 dark:text-zinc-100">Supprimer l'article</h2>
+        <p class="text-slate-600 dark:text-zinc-300 mb-6">
+            Êtes-vous sûr de vouloir supprimer <strong>{{ article.nom }}</strong> ({{ article.code_barres }}) ?
+            Cette action est irréversible.
+        </p>
+        
+        <form method="POST" class="flex gap-4">
+            {% csrf_token %}
+            <a href="{% url 'articles:liste_articles' %}"
+               class="flex-1 px-4 py-2 rounded-lg transition text-center border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700">
+                Annuler
+            </a>
+            <button type="submit"
+                    class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition font-semibold">
+                Supprimer
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
