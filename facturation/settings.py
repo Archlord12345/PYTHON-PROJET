@@ -45,9 +45,7 @@ INSTALLED_APPS = [
     'apps.gestionnaire',
     # Apps
     'facturation',
-    'apps.authentification',
     'apps.caisse',
-    'apps.phone',
     'apps.report',
     'apps.articles',
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.db import models
+from django.db import models, transaction
 from facturation.models import Article, Client, Facture, DetailFacture, Utilisateur
 from decimal import Decimal
 import json
@@ -37,6 +37,7 @@ def search_articles(request):
         'code_barres': article.code_barres,
         'prix_ttc': float(article.prix_TTC),
         'prix_ht': float(article.prix_HT),
+        'tva_rate': float(article.taux_TVA) * 100,
         'stock': article.stock_actuel
     } for article in articles]
     
@@ -52,43 +53,71 @@ def create_facture(request):
         if not items:
             return JsonResponse({'error': 'Panier vide'}, status=400)
         
-        # Calculer le montant total
-        montant_total = sum(Decimal(str(item['total'])) for item in items)
-        
-        # Créer un client par défaut ou récupérer un client existant
+        caissier = Utilisateur.objects.filter(actif=True, role="Caissier").first()
         client, _ = Client.objects.get_or_create(
-            nom='Client Anonyme',
-            defaults={'type': 'particulier'}
+            nom="Client Anonyme",
+            defaults={"type": "anonyme"},
         )
-        
-        # Créer la facture
-        facture = Facture.objects.create(
-            montant=montant_total,
-            client=client,
-            caissier=None  
-        )
-        
-        # Créer les détails de facture
-        for item in items:
-            article = Article.objects.get(id=item['article_id'])
-            DetailFacture.objects.create(
-                facture=facture,
-                article=article,
-                quantite=item['quantite'],
-                prix_unitaire=Decimal(str(item['prix_unitaire'])),
-                remise=Decimal(str(item.get('remise', 0))),
-                total_ligne=Decimal(str(item['total']))
+
+        montant_ht = Decimal("0")
+        montant_tva = Decimal("0")
+        montant_ttc = Decimal("0")
+        detail_rows = []
+
+        with transaction.atomic():
+            for item in items:
+                article_id = item.get("article_id")
+                quantite = int(item.get("quantite", 0))
+                if not article_id or quantite <= 0:
+                    return JsonResponse({"error": "Ligne article invalide"}, status=400)
+
+                article = Article.objects.select_for_update().get(id=article_id, actif=True)
+                if article.stock_actuel < quantite:
+                    return JsonResponse(
+                        {"error": f"Stock insuffisant pour {article.nom} (disponible: {article.stock_actuel})"},
+                        status=400,
+                    )
+
+                line_ht = (article.prix_HT * quantite).quantize(Decimal("0.01"))
+                line_ttc = (article.prix_TTC * quantite).quantize(Decimal("0.01"))
+                line_tva = (line_ttc - line_ht).quantize(Decimal("0.01"))
+
+                montant_ht += line_ht
+                montant_tva += line_tva
+                montant_ttc += line_ttc
+
+                detail_rows.append(
+                    {
+                        "article": article,
+                        "quantite": quantite,
+                        "prix_unitaire": article.prix_TTC,
+                        "remise": Decimal("0"),
+                        "total_ligne": line_ttc,
+                    }
+                )
+
+            facture = Facture.objects.create(
+                montant_HT=montant_ht,
+                montant_TVA=montant_tva,
+                montant_TTC=montant_ttc,
+                mode_paiement=data.get("mode_paiement", "especes"),
+                client=client,
+                caissier=caissier,
             )
-            
-            # Mettre à jour le stock
-            article.stock_actuel -= item['quantite']
-            article.save()
+
+            for row in detail_rows:
+                DetailFacture.objects.create(facture=facture, **row)
+                row["article"].stock_actuel -= row["quantite"]
+                row["article"].save(update_fields=["stock_actuel"])
         
         return JsonResponse({
             'success': True,
             'facture_id': facture.id,
             'numero_facture': f'FAC-{facture.id:08d}'
         })
-        
+    except Article.DoesNotExist:
+        return JsonResponse({'error': "Article introuvable ou inactif"}, status=404)
+    except ValueError:
+        return JsonResponse({'error': "Format de données invalide"}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
