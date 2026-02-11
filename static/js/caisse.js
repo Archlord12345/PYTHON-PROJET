@@ -130,7 +130,15 @@ function displaySearchResults(articles) {
 }
 
 // Add to cart from modal
-function addToCartFromModal(article) {
+function addToCartFromModal(articleId, nom, codeBarres, prixTTC, prixHT, stock) {
+    const article = {
+        id: articleId,
+        nom: nom,
+        code_barres: codeBarres,
+        prix_ttc: prixTTC,
+        prix_ht: prixHT,
+        stock: stock
+    };
     addToCart(article);
     closeSearchModal();
 }

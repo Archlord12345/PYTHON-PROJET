@@ -259,7 +259,7 @@
         </div>
     </div>
 
-    
+    <!-- Search Modal -->
     <div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
@@ -273,13 +273,28 @@
                     </button>
                 </div>
 
-                <div class="p-6">
+                <div class="p-6 border-b border-gray-200">
                     <input type="text" id="modalSearchInput" placeholder="Rechercher par nom ou code-barres..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                        oninput="filterProducts()">
                 </div>
 
-                <div id="searchResults" class="flex-1 overflow-y-auto px-6 pb-6">
-                    <!-- Search results will be inserted here -->
+                <div id="searchResults" class="flex-1 overflow-y-auto">
+                    <!-- Liste des produits depuis la base de données -->
+                    {% for article in articles %}
+                    <div class="search-result-item border-b border-gray-200 p-4 hover:bg-gray-50 cursor-pointer" onclick="addToCartFromModal({{ article.id }}, '{{ article.nom|escapejs }}', '{{ article.code_barres }}', {{ article.prix_TTC }}, {{ article.prix_HT }}, {{ article.stock_actuel }})">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-900">{{ article.nom }}</h4>
+                                <p class="text-sm text-gray-500">{{ article.code_barres }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-gray-900">{{ article.prix_TTC|floatformat:2 }} €</p>
+                                <p class="text-sm text-gray-500">Stock: {{ article.stock_actuel }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -355,6 +370,277 @@
         </div>
     </div>
 
+    <script>
+        
+        let cart = [];
+
+        // Ouvrir le modal de recherche
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('modalSearchInput').focus();
+            renderProducts(products);
+        }
+
+        // Fermer le modal de recherche
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.add('hidden');
+            document.getElementById('modalSearchInput').value = '';
+        }
+
+        // Filtrer les produits
+        function filterProducts() {
+            const searchTerm = document.getElementById('modalSearchInput').value.trim();
+            
+            if (searchTerm.length < 2) {
+                renderProducts(products);
+                return;
+            }
+            
+            // Faire une requête GET à search_articles
+            fetch(`/caisse/api/search/?q=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('searchResults').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la recherche:', error);
+                    document.getElementById('searchResults').innerHTML = 
+                        '<p class="text-center text-red-500 py-8">Erreur lors de la recherche</p>';
+                });
+        }
+
+        // Afficher les produits
+        function renderProducts(productsToShow) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (productsToShow.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="p-8 text-center text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-lg font-medium">Aucun produit trouvé</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults.innerHTML = productsToShow.map(product => `
+                <div class="search-result-item border-b border-gray-200 p-4 hover:bg-gray-50 cursor-pointer" 
+                     onclick="addToCart('${product.name}', ${product.price}, '${product.barcode}', ${product.stock})">
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900">${product.name}</h4>
+                            <p class="text-sm text-gray-500">${product.barcode}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-gray-900">${product.price.toFixed(2)} €</p>
+                            <p class="text-sm text-gray-500">Stock: ${product.stock}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Ajouter au panier depuis la modale (avec paramètres individuels)
+        function addToCartFromModal(articleId, name, barcode, priceTTC, priceHT, stock) {
+            const existingItem = cart.find(item => item.barcode === barcode);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    id: articleId,
+                    name: name,
+                    price: priceTTC,
+                    price_ht: priceHT,
+                    barcode: barcode,
+                    stock: stock,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            closeSearchModal();
+        }
+
+        // Ajouter au panier
+        function addToCart(name, price, barcode, stock) {
+            const existingItem = cart.find(item => item.barcode === barcode);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    name: name,
+                    price: price,
+                    barcode: barcode,
+                    stock: stock,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            closeSearchModal();
+        }
+
+        // Mettre à jour le panier
+        function updateCart() {
+            const cartContainer = document.getElementById('cartItems');
+            const cartTitle = document.getElementById('cartTitle');
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="p-12 text-center">
+                        <svg class="w-24 h-24 mx-auto mb-4 empty-cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        <p class="text-gray-400 text-lg">Panier vide</p>
+                        <p class="text-gray-400 text-sm mt-2">Scannez ou recherchez un article pour commencer</p>
+                    </div>
+                `;
+                cartTitle.textContent = 'Panier (0 articles)';
+                updateTotals();
+                return;
+            }
+
+            cartTitle.textContent = `Panier (${cart.length} article${cart.length > 1 ? 's' : ''})`;
+            
+            cartContainer.innerHTML = cart.map(item => `
+                <div class="cart-item p-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900">${item.name}</h4>
+                            <p class="text-sm text-gray-500">${item.price.toFixed(2)} € • TVA 5.5%</p>
+                        </div>
+                        <span class="text-lg font-bold text-gray-900">${(item.price * item.quantity).toFixed(2)} €</span>
+                        <button onclick="removeFromCart('${item.barcode}')" class="ml-3 text-red-500 hover:text-red-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="decreaseQuantity('${item.barcode}')" class="quantity-btn w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </button>
+                        <input type="number" value="${item.quantity}" class="w-16 text-center border border-gray-300 rounded-lg py-1" readonly>
+                        <button onclick="increaseQuantity('${item.barcode}')" class="quantity-btn w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateTotals();
+        }
+
+        // Augmenter la quantité
+        function increaseQuantity(barcode) {
+            const item = cart.find(i => i.barcode === barcode);
+            if (item) {
+                item.quantity++;
+                updateCart();
+            }
+        }
+
+        // Diminuer la quantité
+        function decreaseQuantity(barcode) {
+            const item = cart.find(i => i.barcode === barcode);
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                updateCart();
+            }
+        }
+
+        // Supprimer du panier
+        function removeFromCart(barcode) {
+            cart = cart.filter(item => item.barcode !== barcode);
+            updateCart();
+        }
+
+        // Mettre à jour les totaux
+        function updateTotals() {
+            const totalHT = cart.reduce((sum, item) => sum + (item.price * item.quantity / 1.055), 0);
+            const totalTVA = cart.reduce((sum, item) => sum + (item.price * item.quantity * 0.055 / 1.055), 0);
+            const totalTTC = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' €';
+            document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' €';
+            document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' €';
+            document.getElementById('itemCount').textContent = itemCount;
+
+            // Activer/désactiver le bouton de paiement
+            const paymentBtn = document.getElementById('paymentBtn');
+            if (cart.length > 0) {
+                paymentBtn.disabled = false;
+            } else {
+                paymentBtn.disabled = true;
+            }
+        }
+
+        // Vider le panier
+        function clearCart() {
+            if (cart.length > 0 && confirm('Voulez-vous vraiment vider le panier ?')) {
+                cart = [];
+                updateCart();
+            }
+        }
+
+        // Ouvrir le modal de paiement (placeholder)
+        function openPaymentModal() {
+            alert('Modal de paiement - À implémenter');
+        }
+
+        // Fermer le modal de reçu (placeholder)
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
+        }
+
+        // Imprimer le reçu (placeholder)
+        function printReceipt() {
+            window.print();
+        }
+
+        // Terminer la transaction (placeholder)
+        function finishTransaction() {
+            cart = [];
+            updateCart();
+            closeReceiptModal();
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F1') {
+                e.preventDefault();
+                openSearchModal();
+            } else if (e.key === 'F5') {
+                e.preventDefault();
+                if (cart.length > 0) {
+                    openPaymentModal();
+                }
+            } else if (e.key === 'Escape') {
+                const searchModal = document.getElementById('searchModal');
+                if (!searchModal.classList.contains('hidden')) {
+                    closeSearchModal();
+                } else if (cart.length > 0) {
+                    clearCart();
+                }
+            }
+        });
+
+        // Initialiser l'affichage au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCart();
+        });
+    </script>
     <script src="{% static 'js/caisse.js' %}"></script>
 </body>
 
