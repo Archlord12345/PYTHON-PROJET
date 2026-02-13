@@ -1,0 +1,149 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# PostgreSQL
+*.sql
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+!.env.example
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Node (pour Tailwind)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Tailwind CSS
+/theme/static/
+/theme/static_src/node_modules/
+/theme/static_src/package-lock.json
+/theme/static_src/package.json
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Fichiers spécifiques au projet
+/theme/static_src/src/styles.css
+
+# Fichiers temporaires
+*.tmp
+*~
+
+# Fichiers de sauvegarde
+*.bak
+*.swp
+*~.nib
+
+# Fichiers de cache
+.cache/
+.installed.cfg
+
+# Fichiers de configuration locaux
+local_settings.py
+local_settings/*.py
+
+# Fichiers de déploiement
+*.pyc
+*.pyo
+*.pyd
+.python-version
+
+# Fichiers de test
+.pytest_cache/
+.mypy_cache/
+
+# Fichiers de débogage
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+# Fichiers de couverture de test
+coverage/
+.coverage.*
+
+# Fichiers d'environnement virtuel
+venv/
+ENV/
+
+# Fichiers de build
+dist/
+build/
+*.egg-info/
+
+# Fichiers de documentation
+_build/
+
+# Fichiers de cache de l'éditeur
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

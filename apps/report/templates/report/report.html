@@ -161,7 +161,7 @@
             <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">
               {{ rupture_articles|join:", " }}{% if rupture > rupture_articles|length %} et autres{% endif %} ne sont plus en stock.
             </p>
-            <button class="mt-3 text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Voir les produits</button>
+            <button class="mt-3 text-xs font-bold text-red-600 dark:text-red-400 hover:underline"><a href="{% url 'articles:liste_articles' %}">Voir les produits</button>
           {% else %}
             <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">Aucun produit en rupture.</p>
           {% endif %}

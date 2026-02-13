@@ -31,4 +31,5 @@ urlpatterns = [
     path('gestionnaire/', include('apps.gestionnaire.urls')),
     path('report/', include('apps.report.urls')),
     path('articles/', include('apps.articles.urls')),
+    path('clients/', include('apps.clients.urls')),
 ]

@@ -36,7 +36,7 @@ def sidebar_context(request):
         {
             'id': 'clients',
             'label': 'Clients',
-            'url': '/gestionnaire/',
+            'url': '/clients/',
             'icon': 'group',
         },
         {

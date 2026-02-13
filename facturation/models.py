@@ -11,6 +11,7 @@ class Client(models.Model):
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
     telephone = models.CharField(max_length=20, blank=True, null=True)
+    adresse = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         full_name = " ".join(part for part in [self.prenom, self.nom] if part)
