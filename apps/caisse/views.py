@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.db import models, transaction
@@ -6,6 +7,7 @@ from facturation.models import Article, Client, Facture, DetailFacture, Utilisat
 from decimal import Decimal
 import json
 
+@login_required
 def index(request):
     """Vue principale de la caisse"""
     # Données de démonstration pour le caissier
@@ -43,6 +45,7 @@ def search_articles(request):
     
     return JsonResponse({'articles': articles_data})
 
+@login_required
 @require_http_methods(["POST"])
 def create_facture(request):
     """Créer une nouvelle facture"""
@@ -51,13 +54,28 @@ def create_facture(request):
         items = data.get('items', [])
         
         if not items:
-            return JsonResponse({'error': 'Panier vide'}, status=400)
+            return JsonResponse({'error': 'Le panier est vide'}, status=400)
         
-        caissier = Utilisateur.objects.filter(actif=True, role="Caissier").first()
-        client, _ = Client.objects.get_or_create(
-            nom="Client Anonyme",
-            defaults={"type": "anonyme"},
-        )
+        # Utiliser l'utilisateur actuellement connecté
+        caissier = request.user
+        
+        # Gérer le client (nom fourni ou anonyme par défaut)
+        client_name = data.get('client_name', '').strip()
+        if client_name:
+            # Créer ou récupérer un client avec le nom fourni
+            client, _ = Client.objects.get_or_create(
+                nom=client_name,
+                defaults={
+                    "type": "Occasionnel",
+                    "prenom": "",
+                },
+            )
+        else:
+            # Client anonyme par défaut
+            client, _ = Client.objects.get_or_create(
+                nom="Client de passage",
+                defaults={"type": "Occasionnel"},
+            )
 
         montant_ht = Decimal("0")
         montant_tva = Decimal("0")

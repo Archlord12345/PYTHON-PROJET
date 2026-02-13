@@ -319,6 +319,8 @@ function openPaymentModal() {
 
 function closeReceiptModal() {
     document.getElementById('receiptModal').classList.add('hidden');
+    // Clear client name input for next transaction
+    document.getElementById('clientNameInput').value = '';
 }
 
 function printReceipt() {
@@ -334,6 +336,9 @@ function finishTransaction() {
     // Sécurité : ne rien faire si le panier est vide
     if (cart.length === 0) return;
 
+    // Récupérer le nom du client (s'il est fourni)
+    const clientName = document.getElementById('clientNameInput').value.trim();
+
     // Préparation des données pour le serveur
     const data = {
         items: cart.map(item => ({
@@ -341,7 +346,8 @@ function finishTransaction() {
             quantite: item.quantite,
             prix_unitaire: item.prix_unitaire,
             total: item.total
-        }))
+        })),
+        client_name: clientName  // Nom du client (peut être vide pour anonyme)
     };
 
     // Envoi de la requête POST au serveur Django

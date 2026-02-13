@@ -14,15 +14,15 @@
                 </div>
                 <div class="flex gap-4">
                     <a href="{% url 'articles:importer_articles' %}"
-                       class="px-4 py-2 rounded-lg transition border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">
+                        class="px-4 py-2 rounded-lg transition border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">
                         Importer CSV
                     </a>
                     <a href="{% url 'articles:export_articles' %}"
-                       class="px-4 py-2 rounded-lg transition border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">
+                        class="px-4 py-2 rounded-lg transition border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">
                         Exporter
                     </a>
                     <a href="{% url 'articles:creer_article' %}"
-                       class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm font-medium text-white">
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm font-medium text-white">
                         Nouvel article
                     </a>
                 </div>
@@ -32,20 +32,19 @@
             <div>
                 <form method="GET" class="flex gap-4 flex-1 flex-wrap">
                     <div class="flex-1 relative">
-                        <input type="text"
-                               name="search"
-                               value="{{ search }}"
-                               placeholder="Rechercher par nom ou code-barres..."
-                               class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 dark:placeholder:text-zinc-500">
+                        <input type="text" name="search" value="{{ search }}"
+                            placeholder="Rechercher par nom ou code-barres..."
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 dark:placeholder:text-zinc-500">
                     </div>
                     <select name="categorie"
-                            class="px-4 py-3 rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500">
+                        class="px-4 py-3 rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500">
                         <option value="">Toutes les catégories</option>
                         {% for value, label in categorie_choices %}
-                            <option value="{{ value }}" {% if categorie == value %}selected{% endif %}>{{ label }}</option>
+                        <option value="{{ value }}" {% if categorie == value %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
                     </select>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm font-medium text-white">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition text-sm font-medium text-white">
                         Filtrer
                     </button>
                 </form>
@@ -53,20 +52,55 @@
         </div>
 
         <!-- Tableau des articles -->
-        <div class="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 shadow-sm">
+        <div
+            class="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 shadow-sm">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
                         <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">Code-barres</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">Nom</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">Catégorie</th>
-                            <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-zinc-200">Prix HT</th>
-                            <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-zinc-200">Prix TTC</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">TVA</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">Stock</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">Statut</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">Actions</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=code_barres&order={% if sort_by == 'code_barres' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                    class="flex items-center gap-1 hover:text-blue-600">
+                                    Code-barres
+                                    {% if sort_by == 'code_barres' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
+                                </a>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=nom&order={% if sort_by == 'nom' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                    class="flex items-center gap-1 hover:text-blue-600">
+                                    Nom
+                                    {% if sort_by == 'nom' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
+                                </a>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=categorie&order={% if sort_by == 'categorie' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                    class="flex items-center gap-1 hover:text-blue-600">
+                                    Catégorie
+                                    {% if sort_by == 'categorie' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
+                                </a>
+                            </th>
+                            <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=prix&order={% if sort_by == 'prix' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                    class="flex items-center justify-end gap-1 hover:text-blue-600">
+                                    Prix HT
+                                    {% if sort_by == 'prix' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
+                                </a>
+                            </th>
+                            <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                Prix TTC</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                TVA</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=stock&order={% if sort_by == 'stock' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                    class="flex items-center justify-center gap-1 hover:text-blue-600">
+                                    Stock
+                                    {% if sort_by == 'stock' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
+                                </a>
+                            </th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                Statut</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-zinc-800">
@@ -79,7 +113,8 @@
                                 <div>
                                     <p class="font-medium text-slate-900 dark:text-zinc-100">{{ article.nom }}</p>
                                     {% if article.description %}
-                                        <p class="text-sm text-slate-500 dark:text-zinc-400">{{ article.description|truncatewords:8 }}</p>
+                                    <p class="text-sm text-slate-500 dark:text-zinc-400">{{
+                                        article.description|truncatewords:8 }}</p>
                                     {% endif %}
                                 </div>
                             </td>
@@ -100,28 +135,31 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 {% if article.actif %}
-                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300">
-                                        ✓ Actif
-                                    </span>
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300">
+                                    ✓ Actif
+                                </span>
                                 {% else %}
-                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-600 dark:bg-zinc-700 dark:text-zinc-300">
-                                        Inactif
-                                    </span>
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-600 dark:bg-zinc-700 dark:text-zinc-300">
+                                    Inactif
+                                </span>
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex justify-center gap-2">
-                                    <button class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition" type="button"
-                                            data-article-id="{{ article.id }}"
-                                            onclick="editArticle(this.dataset.articleId)"
-                                            title="Éditer">
+                                    <button
+                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                                        type="button" data-article-id="{{ article.id }}"
+                                        onclick="editArticle(this.dataset.articleId)" title="Éditer">
                                         ✎
                                     </button>
-                                    <button class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition" type="button"
-                                            data-article-id="{{ article.id }}"
-                                            data-article-name="{{ article.nom }}"
-                                            onclick="deleteArticle(this.dataset.articleId, this.dataset.articleName)"
-                                            title="Supprimer">
+                                    <button
+                                        class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition"
+                                        type="button" data-article-id="{{ article.id }}"
+                                        data-article-name="{{ article.nom }}"
+                                        onclick="deleteArticle(this.dataset.articleId, this.dataset.articleName)"
+                                        title="Supprimer">
                                         🗑
                                     </button>
                                 </div>
@@ -147,12 +185,12 @@
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/articles/supprimer/${id}/`;
-            
+
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
             if (csrfToken) {
                 form.appendChild(csrfToken.cloneNode(true));
             }
-            
+
             document.body.appendChild(form);
             form.submit();
         }

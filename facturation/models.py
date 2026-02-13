@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class Client(models.Model):
     TYPE_CHOICES = [
@@ -18,7 +19,22 @@ class Client(models.Model):
         return full_name or "Client"
 
 
-class Utilisateur(models.Model):
+class UtilisateurManager(BaseUserManager):
+    def create_user(self, login, password=None, **extra_fields):
+        if not login:
+            raise ValueError("L'identifiant (login) est obligatoire")
+        user = self.model(login=login, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, login, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', 'Administrateur')
+        return self.create_user(login, password, **extra_fields)
+
+class Utilisateur(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ("Administrateur", "Administrateur"),
         ("Gestionnaire", "Gestionnaire"),
@@ -29,9 +45,15 @@ class Utilisateur(models.Model):
     login = models.CharField(max_length=50, unique=True)
     nom = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
-    mot_de_passe = models.CharField(max_length=255)
     role = models.CharField(max_length=50, choices=ROLE_CHOICES)
-    actif = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    objects = UtilisateurManager()
+
+    USERNAME_FIELD = 'login'
+    REQUIRED_FIELDS = ['nom', 'role']
 
     def __str__(self):
         return self.login

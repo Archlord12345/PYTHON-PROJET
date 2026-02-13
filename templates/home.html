@@ -1,33 +1,103 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Accueil - Facturation</title>
-        {% tailwind_css %}
-    </head>
-    <body class="bg-gray-100">
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenue sur votre application de facturation</h1>
-                <p class="text-gray-600 mb-6">Gérez facilement vos factures, clients et produits.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-blue-700">Factures</h2>
-                        <p class="text-gray-600">Créez et gérez vos factures en quelques clics</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-green-700">Clients</h2>
-                        <p class="text-gray-600">Gérez votre base de données clients</p>
-                    </div>
-                    <div class="bg-purple-50 p-4 rounded-lg">
-                        <h2 class="text-xl font-semibold text-purple-700">Produits</h2>
-                        <p class="text-gray-600">Gérez votre catalogue de produits</p>
-                    </div>
-                </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail - SuperMarket POS</title>
+    {% tailwind_css %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .role-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#F3F7FA] min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-['Inter',_sans-serif]">
+    <!-- Background subtle diagonal lines/texture -->
+    <div class="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" stroke-width="1" />
+            <line x1="100%" y1="0" x2="0" y2="100%" stroke="currentColor" stroke-width="1" />
+        </svg>
+    </div>
+
+    <div class="max-w-4xl w-full space-y-12 relative z-10">
+        <!-- Logo and Title -->
+        <div class="text-center space-y-4">
+            <div class="inline-block p-6 bg-white rounded-[2rem] shadow-sm border-[1.5px] border-[#22c55e]/30">
+                <img src="{% static 'img/logo_no_bg.png' %}" alt="Caisse Plus Logo"
+                    class="h-28 w-auto mx-auto transform hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="space-y-1">
+                <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Caisse Plus</h1>
+                <p class="text-base text-slate-600 font-medium">L'intelligence au service de votre point de vente.</p>
             </div>
         </div>
-    </body>
+
+        <!-- Role Selection Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+            <!-- Portail Caisse Card -->
+            <div
+                class="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-50 flex flex-col items-center text-center space-y-6">
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-bold text-slate-900">Portail Caisse</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-[200px] mx-auto">Encaissements rapides,
+                        gestion des factures et client.</p>
+                </div>
+                <a href="{% url 'authentification:login' %}?role=Caissier"
+                    class="inline-flex items-center gap-2 px-10 py-3.5 bg-[#00A65A] hover:bg-[#008d4c] text-white rounded-full font-bold text-sm transition-all shadow-lg shadow-[#00A65A]/20 hover:-translate-y-0.5">
+                    <span>Ouvrir la session</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Gestion de Stock Card -->
+            <div
+                class="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-50 flex flex-col items-center text-center space-y-6">
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-bold text-slate-900">Gestion de Stock</h2>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-[200px] mx-auto">Inventaire complet, articles
+                        et rapports d'analyse.</p>
+                </div>
+                <a href="{% url 'authentification:login' %}?role=Gestionnaire"
+                    class="inline-flex items-center gap-2 px-10 py-3.5 bg-[#FF6B6B] hover:bg-[#fa5252] text-white rounded-full font-bold text-sm transition-all shadow-lg shadow-[#FF6B6B]/20 hover:-translate-y-0.5">
+                    <span>Accéder au dashboard</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-slate-400 text-[11px] font-medium pt-8">
+            &copy; 2026 ArchiProject. Système de Facturation Intelligent.
+        </div>
+    </div>
+</body>
+
 </html>

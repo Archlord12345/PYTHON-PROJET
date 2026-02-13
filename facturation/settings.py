@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'apps.report',
     'apps.articles',
     'apps.clients',
+    'apps.authentification',
+    'apps.parametre',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +140,8 @@ STATICFILES_DIRS = [
 # media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+# User Model
+AUTH_USER_MODEL = 'facturation.Utilisateur'
+LOGIN_URL = 'authentification:login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

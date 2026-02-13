@@ -32,4 +32,6 @@ urlpatterns = [
     path('report/', include('apps.report.urls')),
     path('articles/', include('apps.articles.urls')),
     path('clients/', include('apps.clients.urls')),
+    path('auth/', include('apps.authentification.urls')),
+    path('parametre/', include('apps.parametre.urls')),
 ]

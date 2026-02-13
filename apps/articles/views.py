@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
 from django.views.decorators.http import require_GET
@@ -7,6 +8,7 @@ from .forms import ArticleFormCreate, ArticleFormEdit
 from .services import ArticleService
 
 
+@login_required
 @require_GET
 def dashboard(request):
     """Affiche le dashboard avec statistiques"""
@@ -21,6 +23,7 @@ def dashboard(request):
     return render(request, 'articles/dashboard.html', context)
 
 
+@login_required
 def liste_articles(request):
     """Affiche la liste des articles avec filtres"""
     articles = Article.objects.all()
@@ -42,6 +45,24 @@ def liste_articles(request):
     if not show_inactive:
         articles = articles.filter(actif=True)
     
+    # Tri
+    sort_by = request.GET.get('sort', 'nom')
+    order = request.GET.get('order', 'asc')
+    
+    valid_sort_fields = {
+        'code_barres': 'code_barres',
+        'nom': 'nom',
+        'categorie': 'categorie',
+        'prix': 'prix_HT',
+        'stock': 'stock_actuel',
+    }
+    
+    db_field = valid_sort_fields.get(sort_by, 'nom')
+    if order == 'desc':
+        db_field = '-' + db_field
+        
+    articles = articles.order_by(db_field)
+    
     # Comptage
     total_articles = Article.objects.count()
     stats = ArticleService.get_statistics()
@@ -54,6 +75,8 @@ def liste_articles(request):
         'categorie_choices': Article.CATEGORIE_CHOICES,
         'stats': stats,
         'show_inactive': show_inactive,
+        'sort_by': sort_by,
+        'order': order,
     }
     
     return render(request, 'articles/liste_articles.html', context)
@@ -143,20 +166,24 @@ def importer_articles(request):
                         errors.append(f"Ligne {row_num}: Champs requis manquants")
                         continue
                     
+                    def clean_float(val):
+                        if not val: return 0.0
+                        return float(str(val).replace(',', '.').strip())
+
                     # Créer ou mettre à jour l'article
                     article, created = Article.objects.update_or_create(
-                        code_barres=row.get('Code-barres').strip(),
+                        code_barres=row.get('Code-barres', '').strip(),
                         defaults={
                             'nom': row.get('Nom', '').strip(),
                             'description': row.get('Description', '').strip(),
-                            'prix_HT': float(row.get('Prix HT', 0)),
-                            'prix_TTC': float(row.get('Prix TTC', 0)),
-                            'taux_TVA': float(row.get('TVA', 5.5)) / 100,
-                            'categorie': row.get('Catégorie', 'epicerie').strip().lower(),
-                            'unite_mesure': row.get('Unité', 'unite').strip().lower(),
-                            'stock_actuel': int(row.get('Stock actuel', 0)),
-                            'stock_minimum': int(row.get('Stock minimum', 5)),
-                            'actif': row.get('Actif', 'Oui').lower() in ['oui', 'yes', '1', 'true'],
+                            'prix_HT': clean_float(row.get('Prix HT', 0)),
+                            'prix_TTC': clean_float(row.get('Prix TTC', 0)),
+                            'taux_tva': clean_float(row.get('TVA', 5.5)) / 100,
+                            'categorie': row.get('Catégorie', 'Epicerie').strip(),
+                            'unite_mesure': row.get('Unité', 'Unite').strip(),
+                            'stock_actuel': int(float(str(row.get('Stock actuel', 0)).replace(',', '.'))),
+                            'stock_minimum': int(float(str(row.get('Stock minimum', 5)).replace(',', '.'))),
+                            'actif': row.get('Actif', 'Oui').strip().lower() in ['oui', 'yes', '1', 'true', 'active'],
                         }
                     )
                     imported_count += 1

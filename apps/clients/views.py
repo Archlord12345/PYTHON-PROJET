@@ -1,4 +1,5 @@
 from decimal import Decimal, ROUND_HALF_UP
+from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
 from urllib.parse import urlencode
@@ -43,9 +44,12 @@ def _serialize_client_row(client):
         "total_spent": _format_fcfa(client.total_spent or Decimal("0")),
         "last_purchase": last_purchase,
         "status": status,
+        "facture_count": client.facture_count or 0,
+        "client_type": client.type or "Occasionnel",
     }
 
 
+@login_required
 def clients_view(request):
     query = (request.GET.get("q") or "").strip()
     sort_key = (request.GET.get("sort") or "name").strip()

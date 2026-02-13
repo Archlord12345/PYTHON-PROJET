@@ -1,15 +1,17 @@
-<aside class="w-16 md:w-64 border-r border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col fixed inset-y-0 z-50 transition-all duration-200" data-sidebar>
+<aside
+  class="w-16 md:w-64 border-r border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col fixed inset-y-0 z-50 transition-all duration-200"
+  data-sidebar>
   <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-zinc-800" data-sidebar-header>
     <div class="flex items-start justify-between gap-3">
-      <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white" data-sidebar-brand>
-        SuperMarket POS
-      </h1>
-      <button
-        type="button"
-        data-sidebar-toggle
+      <div class="flex items-center gap-3">
+        <img src="/static/img/logo_no_bg.png" alt="Logo" class="w-8 h-8 object-contain">
+        <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white" data-sidebar-brand>
+          Caisse Plus
+        </h1>
+      </div>
+      <button type="button" data-sidebar-toggle
         class="inline-flex items-center justify-center w-8 h-8 rounded-md border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
-        aria-label="Réduire le menu"
-      >
+        aria-label="Réduire le menu">
         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
       </button>
     </div>
@@ -25,42 +27,33 @@
 
   <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto" data-sidebar-nav>
     {% for item in sidebar_items %}
-      <a
-        href="{{ item.url }}"
-        class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all {% if item.is_active %}bg-slate-200/80 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-sm{% else %}text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800{% endif %}"
-      >
-        <span class="material-symbols-outlined text-[20px] text-slate-700 dark:text-zinc-300">{{ item.icon }}</span>
-        <span data-sidebar-label>{{ item.label }}</span>
-      </a>
+    <a href="{{ item.url }}"
+      class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all {% if item.is_active %}bg-slate-200/80 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-sm{% else %}text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800{% endif %}">
+      <span class="material-symbols-outlined text-[20px] text-slate-700 dark:text-zinc-300">{{ item.icon }}</span>
+      <span data-sidebar-label>{{ item.label }}</span>
+    </a>
     {% endfor %}
   </nav>
 
   <div class="p-4 border-t border-slate-200 dark:border-zinc-800 space-y-3" data-sidebar-footer>
     <div class="flex items-center justify-between px-1">
       <span class="text-xs font-medium text-slate-500 uppercase tracking-wider" data-sidebar-label>Thème</span>
-      <button
-        data-theme-toggle
-        class="text-slate-600 hover:text-slate-900 transition-colors"
-        aria-label="Basculer le thème"
-      >
+      <button data-theme-toggle class="text-slate-600 hover:text-slate-900 transition-colors"
+        aria-label="Basculer le thème">
         <span class="material-symbols-outlined text-[20px] dark:hidden">dark_mode</span>
         <span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
       </button>
     </div>
 
     {% if user.is_authenticated %}
-    <a
-      href="{{ logout_url }}"
-      class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg border border-slate-200 dark:border-zinc-700 transition-all"
-    >
+    <a href="{{ logout_url }}"
+      class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg border border-slate-200 dark:border-zinc-700 transition-all">
       <span class="material-symbols-outlined text-[20px]">logout</span>
       <span data-sidebar-label>Déconnexion</span>
     </a>
     {% else %}
-    <a
-      href="{{ login_url }}"
-      class="w-full flex items-center justify-center gap-3 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all"
-    >
+    <a href="{{ login_url }}"
+      class="w-full flex items-center justify-center gap-3 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all">
       <span class="material-symbols-outlined text-[20px]">login</span>
       <span data-sidebar-label>Connexion</span>
     </a>
