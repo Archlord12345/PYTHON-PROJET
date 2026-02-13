@@ -1,6 +1,68 @@
-# Application de Facturation
+<p align="center">
+  <img src="static/images/logo.png" alt="Logo Facturation" width="200"/>
+</p>
 
-Application web de gestion de facturation développée avec Django.
+<h1 align="center">Application de Facturation</h1>
+
+<p align="center">
+  Application web de gestion de facturation développée avec Django.
+</p>
+
+## 🎯 Nouvelles Fonctionnalités (2024)
+
+### � Dashboard Fonctionnel
+- Vue d'ensemble avec statistiques clés (ventes, articles, clients, factures)
+- Graphiques des ventes par jour/semaine/mois/année
+- Top 5 des articles les plus vendus
+- Top 5 des meilleurs clients
+- Répartition des modes de paiement
+- Alertes de stock bas
+
+### �👥 Système de Rôles Avancé
+Trois types de comptes avec accès différenciés :
+
+| Rôle | Dashboard | Caisse | Articles | Clients | Rapports | Paramètres | Utilisateurs |
+|------|-----------|--------|----------|---------|----------|------------|--------------|
+| **Caissier** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Gestionnaire** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Administrateur** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+### 🔐 Comptes par défaut
+
+| Login | Mot de passe | Rôle |
+|-------|--------------|------|
+| `admin` | `admin` | Administrateur |
+| `gestionnaire` | `gestionnaire` | Gestionnaire |
+| `caissiere` | `caissiere` | Caissier |
+
+### 👤 Module Utilisateurs (Admin uniquement)
+- Créer des comptes (Caissier, Gestionnaire, Administrateur)
+- Modifier les utilisateurs existants
+- Activer/Désactiver des comptes
+- Supprimer des utilisateurs
+- Statistiques par rôle
+
+### 💰 Caisse Améliorée
+- **Client nommé ou anonyme** : Possibilité d'entrer un nom de client ou laisser anonyme
+- **Effet de flou** : Arrière-plan flouté quand le champ code-barres est actif
+- **Liste d'articles** : Affichage de tous les articles dans le modal de recherche
+- **Placeholder visible** : Texte d'aide plus visible dans le champ de recherche
+
+### 📦 Gestion des Articles
+- **Prix TTC automatique** : Calcul automatique du prix TTC à partir du prix HT et du taux de TVA
+- **TVA personnalisable** : Saisie libre du taux de TVA (pas seulement les valeurs prédéfinies)
+- Affichage en temps réel du prix TTC calculé
+
+### 📁 Transfert de Données
+Système de fixtures pour faciliter le transfert entre machines :
+```bash
+# Sauvegarder les données
+./backup_data.sh
+
+# Restaurer sur une nouvelle machine
+python manage.py loaddata apps/utilisateurs/fixtures/users.json
+python manage.py loaddata apps/utilisateurs/fixtures/articles.json
+```
 
 ## 👥 Chefs d'équipe
 
@@ -15,26 +77,32 @@ Application web de gestion de facturation développée avec Django.
 #### 1. Client
 - **📝 Description** : Représente un client de l'entreprise
 - **📋 Champs** :
-  - `nom` : Nom du client (obligatoire)
-  - `type` : Type de client (professionnel/particulier, optionnel)
+  - `nom` : Nom du client
+  - `prenom` : Prénom du client
+  - `type` : Type de client (enregistre/anonyme/occasionnel)
   - `email` : Adresse email (unique, optionnel)
   - `telephone` : Numéro de téléphone (optionnel)
+  - `adresse` : Adresse postale (optionnel)
 
 #### 2. Utilisateur
 - **📝 Description** : Compte utilisateur pour l'accès au système
 - **📋 Champs** :
   - `login` : Identifiant de connexion (unique)
-  - `mot_de_passe` : Mot de passe (hashé)
-  - `role` : Rôle de l'utilisateur (admin, caissier, etc.)
-  - `actif` : Statut du compte
+  - `password` : Mot de passe (hashé)
+  - `role` : Rôle de l'utilisateur (Administrateur/Gestionnaire/Caissier)
+  - `is_active` : Statut du compte
+  - `date_joined` : Date de création
 
 #### 3. Article
 - **📝 Description** : Produit en vente
 - **📋 Champs** :
   - `code_barres` : Code-barres unique
   - `nom` : Désignation de l'article
+  - `description` : Description détaillée
   - `prix_HT` : Prix hors taxes
-  - `prix_TTC` : Toutes taxes comprises
+  - `prix_TTC` : Prix TTC (calculé automatiquement)
+  - `taux_TVA` : Taux de TVA
+  - `categorie` : Catégorie de l'article
   - `stock_actuel` : Quantité en stock
   - `stock_minimum` : Seuil d'alerte de stock
   - `actif` : Article actif ou non
@@ -44,50 +112,25 @@ Application web de gestion de facturation développée avec Django.
 #### 4. Facture
 - **📝 Description** : Document de vente
 - **🔗 Relations** :
-  - `client` : Référence au client (obligatoire)
+  - `client` : Référence au client
   - `caissier` : Utilisateur ayant créé la facture
 - **📋 Champs** :
-  - `date` : Date de création (auto)
-  - `montant` : Montant total de la facture
+  - `date_facture` : Date de création (auto)
+  - `montant_HT` : Montant hors taxes
+  - `montant_TVA` : Montant de la TVA
+  - `montant_TTC` : Montant TTC
+  - `mode_paiement` : Mode de paiement (espèces, carte, etc.)
 
 #### 5. DetailFacture
 - **📝 Description** : Ligne de détail d'une facture
 - **🔗 Relations** :
-  - `facture` : Facture parente (obligatoire)
+  - `facture` : Facture parente
   - `article` : Article concerné
 - **📋 Champs** :
   - `quantite` : Quantité vendue
   - `prix_unitaire` : Prix à l'unité
-  - `remise` : Remise appliquée (%)
-  - `total_ligne` : Total de la ligne (calculé)
-
-### 📊 Autres entités
-
-#### 6. Retour
-- **📝 Description** : Retour d'articles
-- **🔗 Relations** :
-  - `facture` : Facture d'origine
-  - `article` : Article retourné
-- **📋 Champs** :
-  - `quantite_retournee` : Quantité retournée
-  - `raison` : Motif du retour
-  - `type` : Type de retour (remboursement, échange, etc.)
-
-#### 7. Audit
-- **📝 Description** : Journal des actions utilisateurs
-- **🔗 Relations** :
-  - `utilisateur` : Auteur de l'action
-- **📋 Champs** :
-  - `type_action` : Type d'action effectuée
-  - `date_action` : Date de l'action (auto)
-  - `description` : Détails de l'action
-
-## ✨ Fonctionnalités
-
-- Authentification des utilisateurs
-- Gestion des clients via le module `phone`
-- Gestion de caisse via le module `caisse`
-- Menu latéral et navigation via le module `gestionnaire`
+  - `remise` : Remise appliquée
+  - `total_ligne` : Total de la ligne
 
 ## 📋 Prérequis
 
@@ -125,7 +168,6 @@ Application web de gestion de facturation développée avec Django.
    \q
    ```
 
-
 3. **🐍 Installation du connecteur Python**
 Le package `psycopg2-binary` est déjà inclus dans `requirements.txt`
 
@@ -158,7 +200,13 @@ Le package `psycopg2-binary` est déjà inclus dans `requirements.txt`
    python manage.py migrate
    ```
 
-6. Démarrer le serveur de développement :
+6. **Charger les données de démonstration (optionnel)** :
+   ```bash
+   python manage.py loaddata apps/utilisateurs/fixtures/users.json
+   python manage.py loaddata apps/utilisateurs/fixtures/articles.json
+   ```
+
+7. Démarrer le serveur de développement :
    
    Utilisez le script `run.sh` pour démarrer à la fois le serveur Django et le watcher Tailwind dans un seul terminal :
    ```bash
@@ -180,15 +228,15 @@ Le package `psycopg2-binary` est déjà inclus dans `requirements.txt`
 Créez un fichier `.env` à la racine du projet avec les variables suivantes :
 
 ```env
-SECRET_KEY = votre_secret_key
+SECRET_KEY=votre_secret_key
 DEBUG=True
 
 # Paramètres de la BD
-DB_NAME = facturation
-DB_USER = user_name
-DB_PASSWORD = password
-DB_HOST = localhost
-PORT = 5432
+DB_NAME=facturation
+DB_USER=user_name
+DB_PASSWORD=password
+DB_HOST=localhost
+PORT=5432
 ```
 
 ## 📁 Structure du projet
@@ -196,10 +244,14 @@ PORT = 5432
 ```text
 facturation/
 ├── apps/
-│   ├── authentification/    # Gestion des utilisateurs et authentification
-│   ├── phone/               # Gestion des contacts
-│   ├── caisse/              # Gestion des paiements
-│   └── gestionnaire/        # Fonctionnalités de base
+│   ├── authentification/    # Gestion de l'authentification
+│   ├── caisse/              # Gestion des ventes et caisse
+│   ├── clients/             # Gestion des clients
+│   ├── articles/            # Gestion du catalogue
+│   ├── report/              # Rapports et statistiques
+│   ├── parametre/           # Paramètres système (Admin uniquement)
+│   ├── utilisateurs/        # Gestion des utilisateurs (Admin uniquement)
+│   └── gestionnaire/        # Dashboard et navigation
 ├── facturation/             # Configuration du projet
 ├── media/                   # Fichiers téléchargés
 ├── static/                  # Fichiers statiques
@@ -209,22 +261,33 @@ facturation/
 
 ## 🧩 Modules
 
-- `authentification` : Connexion et inscription
-- `phone` : Gestion des contacts/clients
-- `caisse` : Encaissements et ventes
-- `gestionnaire` : Navigation et menu latéral
+- `authentification` : Connexion et déconnexion
+- `caisse` : Encaissements, ventes, gestion du panier
+- `clients` : Gestion des clients et historique d'achats
+- `articles` : Catalogue produits, gestion des stocks
+- `report` : Rapports de ventes, statistiques
+- `parametre` : Configuration système (Admin uniquement)
+- `utilisateurs` : Création et gestion des comptes (Admin uniquement)
+- `gestionnaire` : Dashboard, sidebar, navigation
 
 ## 🌐 Routes principales
 
-- `authentification/` : pages login/signup
-- `phone/` : pages clients
-- `caisse/` : pages de caisse
+| URL | Description | Accès |
+|-----|-------------|-------|
+| `/auth/login/` | Page de connexion | Public |
+| `/gestionnaire/` | Dashboard | Tous |
+| `/caisse/` | Caisse | Tous |
+| `/articles/` | Gestion des articles | Gestionnaire, Admin |
+| `/clients/` | Gestion des clients | Gestionnaire, Admin |
+| `/report/` | Rapports | Gestionnaire, Admin |
+| `/parametre/` | Paramètres | Admin uniquement |
+| `/utilisateurs/` | Gestion des utilisateurs | Admin uniquement |
 
 ## 💻 Développement
 
 ### 🎨 Configuration de Tailwind CSS
 
-Ce projet utilise `django-tailwind`, une intégration de Tailwind CSS pour Django qui ne nécessite pas Node.js.
+Ce projet utilise `django-tailwind`, une intégration de Tailwind CSS pour Django.
 
 #### ⚙️ Installation et configuration
 
@@ -248,13 +311,28 @@ Ce projet utilise `django-tailwind`, une intégration de Tailwind CSS pour Djang
 - Utilisez le script `run.sh` pour démarrer le serveur de développement et le watcher Tailwind en une seule commande.
 - Les fichiers de configuration se trouvent dans le dossier `theme/`
 - Les fichiers CSS générés sont disponibles dans `static_src/` et copiés automatiquement vers `static/`
-- Pour les modifications CSS, Tailwatch surveille automatiquement les changements et recompile les fichiers nécessaires
+
+## 📦 Transfert de données entre machines
+
+### Sauvegarde
+```bash
+./backup_data.sh
+```
+
+### Restauration
+```bash
+python manage.py loaddata apps/utilisateurs/fixtures/users.json
+python manage.py loaddata apps/utilisateurs/fixtures/articles.json
+python manage.py loaddata apps/utilisateurs/fixtures/clients.json
+python manage.py loaddata apps/utilisateurs/fixtures/factures.json
+python manage.py loaddata apps/utilisateurs/fixtures/details.json
+```
 
 ## 👥 Travail d'équipe et bonnes pratiques
 
 ### 🏗️ Architecture modulaire
 
-Ce projet suit une architecture modulaire où chaque équipe peut travailler sur un module spécifique de manière indépendante. Voici comment collaborer efficacement :
+Ce projet suit une architecture modulaire où chaque équipe peut travailler sur un module spécifique.
 
 #### 📂 Structure des modules
 
@@ -264,6 +342,7 @@ mon_module/
 ├── migrations/     # Migrations spécifiques au module
 ├── static/         # Fichiers statiques du module
 ├── templates/      # Templates spécifiques au module
+├── fixtures/       # Données de démonstration
 ├── __init__.py
 ├── admin.py       # Configuration admin
 ├── apps.py        # Configuration de l'application
@@ -271,24 +350,6 @@ mon_module/
 ├── urls.py        # URLs du module
 └── views.py       # Vues du module
 ```
-
-#### ✅ Bonnes pratiques pour les équipes
-
-1. **👥 Un module = Une équipe**
-   - Chaque équipe est responsable d'un des 4 modules (`authentification`, `phone`, `caisse`, `gestionnaire`)
-   - Les dépendances entre modules doivent être minimales et bien documentées
-
-2. **🏷️ Espaces de noms**
-   - Utilisez des namespaces pour les URLs : `path('mon-module/', include(('mon_module.urls', 'mon_module'), namespace='mon_module'))`
-   - Préfixez les noms des templates : `mon_module/nom_du_template.html`
-
-#### 🎯 Avantages de cette architecture
-
-- **Développement parallèle** : Plusieurs équipes peuvent travailler simultanément sur différents modules
-- **Maintenabilité** : Le code est mieux organisé et plus facile à maintenir
-- **Évolutivité** : Nouveaux modules faciles à ajouter sans impacter les fonctionnalités existantes
-- **Réutilisation** : Les modules peuvent être réutilisés dans d'autres projets Django
-- **Isolation** : Les problèmes sont contenus dans leur module respectif
 
 ## 📄 Licence
 

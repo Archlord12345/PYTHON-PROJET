@@ -26,9 +26,11 @@
 
     <body class="bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 min-h-screen" style="font-family: Inter, sans-serif;">
         {% include "includes/_sidebar.html" %}
-        <main class="ml-16 md:ml-64 p-8 min-h-screen transition-all duration-200" data-main>
-            {% block content %}{% endblock %}
-        </main>
+        <div id="content-wrapper" class="contents">
+            <main class="ml-16 md:ml-64 p-8 min-h-screen transition-all duration-200" data-main>
+                {% block content %}{% endblock %}
+            </main>
+        </div>
         {% block extra_js %}{% endblock %}
         <script>
             (function () {

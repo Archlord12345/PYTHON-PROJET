@@ -23,6 +23,15 @@ function setupEventListeners() {
         }
     });
 
+    // Ajouter effet de flou quand le champ est focus
+    searchInput.addEventListener('focus', function () {
+        document.body.classList.add('search-active');
+    });
+
+    searchInput.addEventListener('blur', function () {
+        document.body.classList.remove('search-active');
+    });
+
     // Barre de recherche dans la fenêtre modale (avec délai/debounce)
     modalSearchInput.addEventListener('input', debounce(function (e) {
         searchArticles(e.target.value);
@@ -97,15 +106,22 @@ function searchArticleByBarcode(barcode) {
 
 // Search articles (modal)
 function searchArticles(query) {
-    if (!query || query.length < 2) {
-        document.getElementById('searchResults').innerHTML = '';
+    // Si vide, charger tous les articles
+    if (!query || query.length === 0) {
+        fetch(`/caisse/api/search/?q=`)
+            .then(response => response.json())
+            .then(data => {
+                lastSearchResults = data.articles;
+                displaySearchResults(data.articles);
+            })
+            .catch(error => console.error('Erreur:', error));
         return;
     }
 
     fetch(`/caisse/api/search/?q=${query}`)
         .then(response => response.json())
         .then(data => {
-            lastSearchResults = data.articles; // Sauvegarde des résultats
+            lastSearchResults = data.articles;
             displaySearchResults(data.articles);
         })
         .catch(error => console.error('Erreur:', error));
@@ -128,7 +144,7 @@ function displaySearchResults(articles) {
                     <p class="text-sm text-gray-500">${article.code_barres}</p>
                 </div>
                 <div class="text-right">
-                    <p class="font-bold text-lg text-gray-900">${article.prix_ttc.toFixed(2)} €</p>
+                    <p class="font-bold text-lg text-gray-900">${article.prix_ttc.toFixed(2)} FCFA</p>
                     <p class="text-sm text-gray-500">Stock: ${article.stock}</p>
                 </div>
             </div>
@@ -216,9 +232,9 @@ function updateCart() {
     cartTitle.textContent = `Panier (${totalItems} article${totalItems > 1 ? 's' : ''})`;
 
     // Update totals
-    document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' €';
-    document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' €';
-    document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' €';
+    document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' FCFA';
+    document.getElementById('totalTVA').textContent = totalTVA.toFixed(2) + ' FCFA';
+    document.getElementById('totalTTC').textContent = totalTTC.toFixed(2) + ' FCFA';
     document.getElementById('itemCount').textContent = totalItems;
 
     // Enable/disable payment button
@@ -243,7 +259,7 @@ function updateCart() {
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
                         <h4 class="font-semibold text-gray-900">${item.nom}</h4>
-                        <p class="text-sm text-gray-500">${item.prix_unitaire.toFixed(2)} € • TVA ${item.tva_rate}%</p>
+                        <p class="text-sm text-gray-500">${item.prix_unitaire.toFixed(2)} FCFA • TVA ${item.tva_rate}%</p>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="flex items-center gap-2">
@@ -259,7 +275,7 @@ function updateCart() {
                                 </svg>
                             </button>
                         </div>
-                        <span class="font-bold text-lg w-24 text-right">${item.total.toFixed(2)} €</span>
+                        <span class="font-bold text-lg w-24 text-right">${item.total.toFixed(2)} FCFA</span>
                         <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -277,6 +293,8 @@ function updateCart() {
 function openSearchModal() {
     document.getElementById('searchModal').classList.remove('hidden');
     document.getElementById('modalSearchInput').focus();
+    // Load all articles immediately
+    searchArticles('');
 }
 
 function closeSearchModal() {
@@ -301,16 +319,16 @@ function openPaymentModal() {
     const totalTTC = cart.reduce((sum, item) => sum + item.total, 0);
     const totalTVA = totalTTC - totalHT;
 
-    document.getElementById('receiptHT').textContent = totalHT.toFixed(2) + ' €';
-    document.getElementById('receiptTVA').textContent = totalTVA.toFixed(2) + ' €';
-    document.getElementById('receiptTTC').textContent = totalTTC.toFixed(2) + ' €';
+    document.getElementById('receiptHT').textContent = totalHT.toFixed(2) + ' FCFA';
+    document.getElementById('receiptTVA').textContent = totalTVA.toFixed(2) + ' FCFA';
+    document.getElementById('receiptTTC').textContent = totalTTC.toFixed(2) + ' FCFA';
 
     // Render items
     const receiptItems = document.getElementById('receiptItems');
     receiptItems.innerHTML = cart.map(item => `
         <div class="flex justify-between text-sm">
             <span>${item.nom} x${item.quantite}</span>
-            <span class="font-medium">${item.total.toFixed(2)} €</span>
+            <span class="font-medium">${item.total.toFixed(2)} FCFA</span>
         </div>
     `).join('');
 
@@ -339,6 +357,9 @@ function finishTransaction() {
     // Récupérer le nom du client (s'il est fourni)
     const clientName = document.getElementById('clientNameInput').value.trim();
 
+    // Récupérer le mode de paiement sélectionné
+    const paymentMethod = document.getElementById('paymentMethod').value;
+
     // Préparation des données pour le serveur
     const data = {
         items: cart.map(item => ({
@@ -347,7 +368,8 @@ function finishTransaction() {
             prix_unitaire: item.prix_unitaire,
             total: item.total
         })),
-        client_name: clientName  // Nom du client (peut être vide pour anonyme)
+        client_name: clientName,  // Nom du client (peut être vide pour anonyme)
+        mode_paiement: paymentMethod // Mode de paiement sélectionné
     };
 
     // Envoi de la requête POST au serveur Django

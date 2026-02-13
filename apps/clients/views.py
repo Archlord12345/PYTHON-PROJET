@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from facturation.models import Client, Facture
+from apps.gestionnaire.decorators import gestionnaire_required
 
 
 def _format_fcfa(amount: Decimal) -> str:
@@ -50,6 +51,7 @@ def _serialize_client_row(client):
 
 
 @login_required
+@gestionnaire_required
 def clients_view(request):
     query = (request.GET.get("q") or "").strip()
     sort_key = (request.GET.get("sort") or "name").strip()
@@ -140,6 +142,8 @@ def clients_view(request):
     return render(request, "clients/index.html", context)
 
 
+@login_required
+@gestionnaire_required
 def create_client(request):
     if request.method != "POST":
         return redirect("clients:index")
@@ -171,6 +175,8 @@ def create_client(request):
     return redirect("clients:index")
 
 
+@login_required
+@gestionnaire_required
 def update_client(request, client_id):
     if request.method != "POST":
         return redirect("clients:index")
@@ -201,6 +207,8 @@ def update_client(request, client_id):
     return redirect("clients:index")
 
 
+@login_required
+@gestionnaire_required
 def client_details(request, client_id):
     client = get_object_or_404(
         Client.objects.annotate(
@@ -236,6 +244,8 @@ def client_details(request, client_id):
     )
 
 
+@login_required
+@gestionnaire_required
 def delete_client(request, client_id):
     if request.method != "POST":
         return redirect("clients:index")

@@ -154,10 +154,11 @@ class Article(models.Model):
 class Facture(models.Model):
     MODE_PAIEMENT_CHOICES = [
         ("especes", "Espèces"),
-        ("carte", "Carte"),
+        ("carte", "Carte bancaire"),
+        ("orange_money", "Orange Money"),
+        ("mtn_momo", "MTN Mobile Money"),
         ("cheque", "Chèque"),
         ("virement", "Virement"),
-        ("ticket_resto", "Ticket resto"),
         ("mixte", "Mixte"),
     ]
     STATUT_CHOICES = [

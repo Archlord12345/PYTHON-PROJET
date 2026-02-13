@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.utils.timesince import timesince
 
 from facturation.models import Article, DetailFacture, Facture
+from apps.gestionnaire.decorators import gestionnaire_required
 
 try:
     from reportlab.lib import colors
@@ -66,6 +67,7 @@ def _get_previous_period_range(period: str, start, end):
 
 
 @login_required
+@gestionnaire_required
 def report_view(request):
     period = request.GET.get("period", "day")
     start, end = _get_period_range(period)
@@ -422,6 +424,7 @@ def _build_report_context(request):
 
 
 @login_required
+@gestionnaire_required
 def export_report_csv(request):
     ctx = _build_report_context(request)
     response = HttpResponse(content_type="text/csv")
@@ -467,6 +470,7 @@ def export_report_csv(request):
 
 
 @login_required
+@gestionnaire_required
 def export_report_pdf(request):
     if SimpleDocTemplate is None:
         return HttpResponse("ReportLab n'est pas installé.", status=500)

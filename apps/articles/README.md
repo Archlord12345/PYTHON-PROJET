@@ -16,7 +16,9 @@ Module complet de gestion des articles pour une application de facturation en Dj
 ```python
 - code_barres (EAN13, unique)
 - nom, description
-- prix_ht, prix_ttc, taux_tva
+- prix_HT (saisi manuellement)
+- taux_TVA (saisi manuellement, ex: 5.5, 20, 8.5)
+- prix_TTC (calculé automatiquement: prix_HT × (1 + taux_TVA))
 - categorie (Boulangerie, Produits laitiers, Fruits & légumes, Viande, Épicerie, Boissons)
 - unite_mesure (Unité, Kg, Litre)
 - stock_actuel, stock_minimum
@@ -24,19 +26,26 @@ Module complet de gestion des articles pour une application de facturation en Dj
 - Métadonnées: created_at, updated_at
 ```
 
-### 3. **Recherche et Filtrage**
+### 3. **Prix TTC Automatique (Nouveau)**
+- 💡 **Fonctionnement** : Vous saisissez le prix HT et le taux de TVA
+- 🧮 **Calcul automatique** : Le prix TTC se calcule en temps réel
+- 👁️ **Visualisation** : Le prix TTC s'affiche dynamiquement dans le formulaire
+- ✅ **Validation** : Le prix TTC est automatiquement enregistré avec l'article
+- 📊 **Flexibilité** : TVA personnalisable (pas limitée aux taux standards)
+
+### 4. **Recherche et Filtrage**
 - Recherche par nom ou code-barres
 - Filtrage par catégorie
 - Filtrage par statut (actif/inactif)
 - Recherche avancée via service
 
-### 4. **Import/Export CSV**
+### 5. **Import/Export CSV**
 - Importer les articles en masse depuis CSV
 - Exporter les articles en CSV
 - Gestion des erreurs ligne par ligne
 - Mise à jour automatique des articles existants
 
-### 5. **Dashboard avec Statistiques**
+### 6. **Dashboard avec Statistiques**
 - Total d'articles
 - Stock total (quantité et valeur)
 - Articles en rupture
@@ -44,24 +53,21 @@ Module complet de gestion des articles pour une application de facturation en Dj
 - Répartition par catégorie
 - Alertes stock faible
 
-### 6. **Validations métier**
+### 7. **Validations métier**
 - Validation EAN13 (13 chiffres)
 - Validation des prix (positifs)
-- Cohérence HT/TTC/TVA
 - Stock minimum logique
 
-### 7. **Interface Dark Mode**
+### 8. **Interface Dark Mode**
 - Design modern avec Tailwind CSS
 - Thème sombre complet (#121212, #1e1e1e)
 - Responsive (mobile, tablet, desktop)
 - Icônes et badges informatifs
 
-### 8. **Tests complets**
-- Tests du modèle
-- Tests des validations
-- Tests des services
-- Tests des vues
-- Tests de recherche et filtrage
+### 9. **Contrôle d'accès**
+- 🔒 Accès réservé aux **Gestionnaires** et **Administrateurs**
+- ❌ Les **Caissiers** n'ont pas accès à ce module
+- 🛡️ Décorateur `@gestionnaire_required` pour la protection des vues
 
 ## 🚀 Routes disponibles
 

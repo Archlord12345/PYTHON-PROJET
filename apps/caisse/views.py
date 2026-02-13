@@ -22,16 +22,17 @@ def search_articles(request):
     """Recherche d'articles par nom ou code-barres"""
     query = request.GET.get('q', '')
     
-    if not query:
-        return JsonResponse({'articles': []})
-    
     # Recherche dans les articles actifs
-    articles = Article.objects.filter(
-        actif=True
-    ).filter(
-        models.Q(nom__icontains=query) | 
-        models.Q(code_barres__icontains=query)
-    )[:10]
+    articles = Article.objects.filter(actif=True)
+    
+    # Si une recherche est fournie, filtrer
+    if query:
+        articles = articles.filter(
+            models.Q(nom__icontains=query) | 
+            models.Q(code_barres__icontains=query)
+        )
+    
+    articles = articles[:50]  # Limite à 50 articles
     
     articles_data = [{
         'id': article.id,

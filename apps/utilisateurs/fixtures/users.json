@@ -1,0 +1,56 @@
+[
+{
+  "model": "facturation.utilisateur",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$BwiBBis4GNmFgrFCZR3r7v$OZGg/zKhMdznxi6549Po1Tv80VacXlT588MbhiyKc+8=",
+    "last_login": "2026-02-13T13:51:29.905Z",
+    "is_superuser": false,
+    "login": "gestionnaire",
+    "nom": "Gestionnaire Stock",
+    "email": "stock@example.com",
+    "role": "Gestionnaire",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-02-13T11:05:09.627Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "facturation.utilisateur",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$sqOwbaj2p6kYkpe562U5qJ$Dt2xnTfB+iqA5rIXMPz3uWnoGs2K1RKoY562QMrfgmc=",
+    "last_login": "2026-02-13T13:41:25.141Z",
+    "is_superuser": false,
+    "login": "caissiere",
+    "nom": "Caissière",
+    "email": "caisse@example.com",
+    "role": "Caissier",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-02-13T11:05:10.857Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "facturation.utilisateur",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$bYpbToRDMuytnSGrwUJyHo$0wNiBgI+9lQdCcRzfvatRXe3Rp6d/kCRvIUTeLGcI6g=",
+    "last_login": "2026-02-13T13:59:33.823Z",
+    "is_superuser": false,
+    "login": "admin",
+    "nom": null,
+    "email": null,
+    "role": "Administrateur",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-02-13T13:58:22.037Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

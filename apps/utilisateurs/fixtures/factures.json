@@ -1,0 +1,114 @@
+[
+{
+  "model": "facturation.facture",
+  "pk": 1,
+  "fields": {
+    "date_facture": "2026-02-13T11:42:32.653Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 2,
+  "fields": {
+    "date_facture": "2026-02-13T11:46:25.475Z",
+    "montant_HT": "3.59",
+    "montant_TVA": "0.20",
+    "montant_TTC": "3.79",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 3,
+  "fields": {
+    "date_facture": "2026-02-13T11:51:00.876Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 4,
+  "fields": {
+    "date_facture": "2026-02-13T12:05:01.204Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 5,
+  "fields": {
+    "date_facture": "2026-02-13T12:15:28.646Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 6,
+  "fields": {
+    "date_facture": "2026-02-13T12:21:28.754Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 7,
+  "fields": {
+    "date_facture": "2026-02-13T12:58:59.176Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 1,
+    "caissier": 4
+  }
+},
+{
+  "model": "facturation.facture",
+  "pk": 8,
+  "fields": {
+    "date_facture": "2026-02-13T13:06:37.220Z",
+    "montant_HT": "150.00",
+    "montant_TVA": "0.00",
+    "montant_TTC": "150.00",
+    "mode_paiement": "especes",
+    "statut": "payee",
+    "client": 2,
+    "caissier": 4
+  }
+}
+]

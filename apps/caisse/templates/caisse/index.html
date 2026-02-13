@@ -30,6 +30,16 @@
         animation: fadeIn 0.2s;
     }
 
+    .search-active #content-wrapper {
+        filter: blur(3px);
+        transition: filter 0.3s ease;
+    }
+
+    #searchInput:focus {
+        z-index: 60;
+        position: relative;
+    }
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -242,7 +252,7 @@
 
             <div class="p-6">
                 <input type="text" id="modalSearchInput" placeholder="Rechercher par nom ou code-barres..."
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder-gray-600 text-gray-900">
             </div>
 
             <div id="searchResults" class="flex-1 overflow-y-auto px-6 pb-6"></div>
@@ -291,8 +301,16 @@
                 </div>
 
                 <div class="mt-6 pt-4 border-t border-gray-200">
-                    <p class="text-sm text-gray-600">Mode de paiement</p>
-                    <p class="font-medium">Espèces</p>
+                    <label for="paymentMethod" class="block text-sm text-gray-600 mb-2">Mode de paiement</label>
+                    <select id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white">
+                        <option value="especes">Espèces</option>
+                        <option value="carte">Carte bancaire</option>
+                        <option value="orange_money">Orange Money</option>
+                        <option value="mtn_momo">MTN Mobile Money</option>
+                        <option value="cheque">Chèque</option>
+                        <option value="virement">Virement</option>
+                        <option value="mixte">Mixte</option>
+                    </select>
                 </div>
 
                 <!-- Client name input -->

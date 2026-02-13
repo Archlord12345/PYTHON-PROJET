@@ -46,19 +46,23 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="{{ form.prix_HT.id_for_label }}" class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">Prix HT</label>
+                        <label for="{{ form.prix_HT.id_for_label }}" class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">Prix HT (€)</label>
                         {{ form.prix_HT }}
                         {% if form.prix_HT.errors %}<p class="text-sm text-red-500 mt-1">{{ form.prix_HT.errors }}</p>{% endif %}
-                    </div>
-                    <div>
-                        <label for="{{ form.prix_TTC.id_for_label }}" class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">Prix TTC</label>
-                        {{ form.prix_TTC }}
-                        {% if form.prix_TTC.errors %}<p class="text-sm text-red-500 mt-1">{{ form.prix_TTC.errors }}</p>{% endif %}
                     </div>
                     <div>
                         <label for="{{ form.taux_TVA.id_for_label }}" class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">TVA (%)</label>
                         {{ form.taux_TVA }}
                         {% if form.taux_TVA.errors %}<p class="text-sm text-red-500 mt-1">{{ form.taux_TVA.errors }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-zinc-300 mb-2">Prix TTC (€)</label>
+                        <input type="text" id="prix_TTC_display" readonly 
+                            class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-zinc-700 bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm"
+                            value="{{ article.prix_TTC|floatformat:2 }} €">
+                        <p class="text-xs text-slate-500 mt-1">Calculé automatiquement</p>
+                        <!-- Hidden field for form submission -->
+                        {{ form.prix_TTC }}
                     </div>
                 </div>
 
@@ -88,4 +92,34 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const prixHtInput = document.querySelector('input[name="prix_HT"]');
+    const tvaInput = document.querySelector('input[name="taux_TVA"]');
+    const ttcDisplay = document.getElementById('prix_TTC_display');
+    const ttcHidden = document.querySelector('input[name="prix_TTC"]');
+    
+    if (!prixHtInput || !tvaInput || !ttcDisplay) {
+        console.error('Erreur: champs prix non trouvés');
+        return;
+    }
+    
+    function calculateTTC() {
+        const prixHt = parseFloat(prixHtInput.value) || 0;
+        const tvaRate = parseFloat(tvaInput.value) || 0;
+        const prixTtc = prixHt * (1 + tvaRate / 100);
+        const prixTtcFormatted = prixTtc.toFixed(2);
+        ttcDisplay.value = prixTtcFormatted + ' €';
+        if (ttcHidden) {
+            ttcHidden.value = prixTtcFormatted;
+        }
+    }
+    
+    prixHtInput.addEventListener('input', calculateTTC);
+    tvaInput.addEventListener('input', calculateTTC);
+    
+    calculateTTC();
+});
+</script>
 {% endblock %}

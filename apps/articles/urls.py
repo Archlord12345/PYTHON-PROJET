@@ -9,6 +9,7 @@ urlpatterns = [
     path('creer/', views.creer_article, name='creer_article'),
     path('editer/<int:pk>/', views.editer_article, name='editer_article'),
     path('supprimer/<int:pk>/', views.supprimer_article, name='supprimer_article'),
+    path('supprimer-tout/', views.supprimer_tout_articles, name='supprimer_tout'),
     path('importer/', views.importer_articles, name='importer_articles'),
     path('exporter/', views.export_articles, name='export_articles'),
 ]

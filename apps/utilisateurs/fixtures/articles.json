@@ -1,0 +1,1702 @@
+[
+{
+  "model": "facturation.article",
+  "pk": 1,
+  "fields": {
+    "code_barres": "EAN13",
+    "nom": "BAN",
+    "description": "",
+    "prix_HT": "150.00",
+    "prix_TTC": "150.00",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 3,
+    "stock_minimum": 10,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 2,
+  "fields": {
+    "code_barres": "1746351317268",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "17.31",
+    "prix_TTC": "18.26",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 6,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 3,
+  "fields": {
+    "code_barres": "0199424124724",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "3.26",
+    "prix_TTC": "3.59",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Litre",
+    "stock_actuel": 10,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 4,
+  "fields": {
+    "code_barres": "8298540867704",
+    "nom": "Fromage",
+    "description": "",
+    "prix_HT": "7.04",
+    "prix_TTC": "7.74",
+    "taux_TVA": "0.000",
+    "categorie": "Boissons",
+    "unite_mesure": "Litre",
+    "stock_actuel": 20,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 5,
+  "fields": {
+    "code_barres": "9453621072952",
+    "nom": "Chocolat",
+    "description": "",
+    "prix_HT": "14.58",
+    "prix_TTC": "17.50",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 10,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 6,
+  "fields": {
+    "code_barres": "7166715610585",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "2.14",
+    "prix_TTC": "2.26",
+    "taux_TVA": "0.000",
+    "categorie": "Legumes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 49,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 7,
+  "fields": {
+    "code_barres": "4526788584771",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "3.90",
+    "prix_TTC": "4.68",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 34,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 8,
+  "fields": {
+    "code_barres": "8067050733906",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "2.33",
+    "prix_TTC": "2.46",
+    "taux_TVA": "0.002",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 3,
+    "stock_minimum": 4,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 9,
+  "fields": {
+    "code_barres": "1699655403988",
+    "nom": "Cereales",
+    "description": "",
+    "prix_HT": "9.12",
+    "prix_TTC": "9.62",
+    "taux_TVA": "0.002",
+    "categorie": "Fruits",
+    "unite_mesure": "Kg",
+    "stock_actuel": 29,
+    "stock_minimum": 1,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 10,
+  "fields": {
+    "code_barres": "3678823975564",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "17.62",
+    "prix_TTC": "19.38",
+    "taux_TVA": "0.002",
+    "categorie": "Fruits",
+    "unite_mesure": "Unite",
+    "stock_actuel": 34,
+    "stock_minimum": 7,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 11,
+  "fields": {
+    "code_barres": "8900399435797",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "4.08",
+    "prix_TTC": "4.17",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 1,
+    "stock_minimum": 7,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 12,
+  "fields": {
+    "code_barres": "4226902403960",
+    "nom": "Legumes",
+    "description": "",
+    "prix_HT": "3.91",
+    "prix_TTC": "4.69",
+    "taux_TVA": "0.000",
+    "categorie": "Legumes",
+    "unite_mesure": "Litre",
+    "stock_actuel": 48,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 13,
+  "fields": {
+    "code_barres": "2526629510652",
+    "nom": "Lait",
+    "description": "",
+    "prix_HT": "10.38",
+    "prix_TTC": "12.46",
+    "taux_TVA": "0.001",
+    "categorie": "Fruits",
+    "unite_mesure": "Unite",
+    "stock_actuel": 37,
+    "stock_minimum": 5,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 14,
+  "fields": {
+    "code_barres": "0564387237288",
+    "nom": "Banane",
+    "description": "",
+    "prix_HT": "9.47",
+    "prix_TTC": "9.99",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Unite",
+    "stock_actuel": 6,
+    "stock_minimum": 5,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 15,
+  "fields": {
+    "code_barres": "8828011586622",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "17.65",
+    "prix_TTC": "18.02",
+    "taux_TVA": "0.000",
+    "categorie": "Legumes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 13,
+    "stock_minimum": 3,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 16,
+  "fields": {
+    "code_barres": "0639135032724",
+    "nom": "Eau",
+    "description": "",
+    "prix_HT": "7.65",
+    "prix_TTC": "9.18",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Unite",
+    "stock_actuel": 46,
+    "stock_minimum": 6,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 17,
+  "fields": {
+    "code_barres": "5719529039261",
+    "nom": "Lait",
+    "description": "",
+    "prix_HT": "5.14",
+    "prix_TTC": "5.65",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 2,
+    "stock_minimum": 7,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 18,
+  "fields": {
+    "code_barres": "9776315384646",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "12.14",
+    "prix_TTC": "12.81",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Unite",
+    "stock_actuel": 5,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 19,
+  "fields": {
+    "code_barres": "8865763031504",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "1.25",
+    "prix_TTC": "1.50",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 48,
+    "stock_minimum": 9,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 20,
+  "fields": {
+    "code_barres": "9211778037416",
+    "nom": "Carotte",
+    "description": "",
+    "prix_HT": "15.31",
+    "prix_TTC": "16.84",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 46,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 21,
+  "fields": {
+    "code_barres": "8046284793141",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "3.15",
+    "prix_TTC": "3.22",
+    "taux_TVA": "0.002",
+    "categorie": "Boissons",
+    "unite_mesure": "Litre",
+    "stock_actuel": 24,
+    "stock_minimum": 10,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 22,
+  "fields": {
+    "code_barres": "8579432648225",
+    "nom": "Legumes",
+    "description": "",
+    "prix_HT": "19.26",
+    "prix_TTC": "20.32",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Boite",
+    "stock_actuel": 43,
+    "stock_minimum": 10,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 23,
+  "fields": {
+    "code_barres": "6685387007372",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "5.66",
+    "prix_TTC": "5.97",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 1,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 24,
+  "fields": {
+    "code_barres": "5952757382984",
+    "nom": "Beurre",
+    "description": "",
+    "prix_HT": "15.94",
+    "prix_TTC": "16.27",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Litre",
+    "stock_actuel": 34,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 25,
+  "fields": {
+    "code_barres": "3179489275882",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "15.34",
+    "prix_TTC": "16.87",
+    "taux_TVA": "0.002",
+    "categorie": "Fruits",
+    "unite_mesure": "Unite",
+    "stock_actuel": 23,
+    "stock_minimum": 10,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 26,
+  "fields": {
+    "code_barres": "2554666770407",
+    "nom": "Cafe",
+    "description": "",
+    "prix_HT": "7.91",
+    "prix_TTC": "8.70",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 22,
+    "stock_minimum": 6,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 27,
+  "fields": {
+    "code_barres": "9118778851225",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "4.09",
+    "prix_TTC": "4.91",
+    "taux_TVA": "0.001",
+    "categorie": "Fruits",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 26,
+    "stock_minimum": 5,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 28,
+  "fields": {
+    "code_barres": "9413499807127",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "15.98",
+    "prix_TTC": "16.86",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Boite",
+    "stock_actuel": 44,
+    "stock_minimum": 1,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 29,
+  "fields": {
+    "code_barres": "9219113666883",
+    "nom": "Fromage",
+    "description": "",
+    "prix_HT": "10.14",
+    "prix_TTC": "11.15",
+    "taux_TVA": "0.000",
+    "categorie": "Legumes",
+    "unite_mesure": "Kg",
+    "stock_actuel": 14,
+    "stock_minimum": 7,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 30,
+  "fields": {
+    "code_barres": "8297442222371",
+    "nom": "Eau",
+    "description": "",
+    "prix_HT": "6.33",
+    "prix_TTC": "6.46",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Litre",
+    "stock_actuel": 49,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 31,
+  "fields": {
+    "code_barres": "0887745623845",
+    "nom": "Cafe",
+    "description": "",
+    "prix_HT": "19.93",
+    "prix_TTC": "20.35",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Boite",
+    "stock_actuel": 5,
+    "stock_minimum": 3,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 32,
+  "fields": {
+    "code_barres": "1520519738243",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "16.62",
+    "prix_TTC": "17.53",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Litre",
+    "stock_actuel": 2,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 33,
+  "fields": {
+    "code_barres": "3720153127382",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "4.67",
+    "prix_TTC": "4.93",
+    "taux_TVA": "0.000",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 21,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 34,
+  "fields": {
+    "code_barres": "5811197921534",
+    "nom": "Chocolat",
+    "description": "",
+    "prix_HT": "18.11",
+    "prix_TTC": "19.11",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Kg",
+    "stock_actuel": 40,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 35,
+  "fields": {
+    "code_barres": "3099422851901",
+    "nom": "Tomate",
+    "description": "",
+    "prix_HT": "15.59",
+    "prix_TTC": "17.15",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 45,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 36,
+  "fields": {
+    "code_barres": "7094254472548",
+    "nom": "Biscuits",
+    "description": "",
+    "prix_HT": "11.08",
+    "prix_TTC": "12.19",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Kg",
+    "stock_actuel": 49,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 37,
+  "fields": {
+    "code_barres": "4907636778120",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "8.68",
+    "prix_TTC": "8.86",
+    "taux_TVA": "0.002",
+    "categorie": "Fruits",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 9,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 38,
+  "fields": {
+    "code_barres": "2270794112698",
+    "nom": "Tomate",
+    "description": "",
+    "prix_HT": "12.71",
+    "prix_TTC": "13.41",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Unite",
+    "stock_actuel": 25,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 39,
+  "fields": {
+    "code_barres": "7240139244028",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "8.86",
+    "prix_TTC": "10.63",
+    "taux_TVA": "0.002",
+    "categorie": "Laitiers",
+    "unite_mesure": "Unite",
+    "stock_actuel": 30,
+    "stock_minimum": 6,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 40,
+  "fields": {
+    "code_barres": "2887589907810",
+    "nom": "Farine",
+    "description": "",
+    "prix_HT": "19.93",
+    "prix_TTC": "21.03",
+    "taux_TVA": "0.002",
+    "categorie": "Boissons",
+    "unite_mesure": "Litre",
+    "stock_actuel": 45,
+    "stock_minimum": 3,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 41,
+  "fields": {
+    "code_barres": "3062620924993",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "1.78",
+    "prix_TTC": "1.96",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Unite",
+    "stock_actuel": 39,
+    "stock_minimum": 6,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 42,
+  "fields": {
+    "code_barres": "6133797183870",
+    "nom": "Viande",
+    "description": "",
+    "prix_HT": "1.05",
+    "prix_TTC": "1.11",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Boite",
+    "stock_actuel": 23,
+    "stock_minimum": 7,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 43,
+  "fields": {
+    "code_barres": "6639261270414",
+    "nom": "Riz",
+    "description": "",
+    "prix_HT": "12.34",
+    "prix_TTC": "12.60",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 22,
+    "stock_minimum": 9,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 44,
+  "fields": {
+    "code_barres": "2890304775605",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "12.76",
+    "prix_TTC": "13.46",
+    "taux_TVA": "0.002",
+    "categorie": "Boissons",
+    "unite_mesure": "Unite",
+    "stock_actuel": 12,
+    "stock_minimum": 10,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 45,
+  "fields": {
+    "code_barres": "5702943243779",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "17.61",
+    "prix_TTC": "19.37",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Unite",
+    "stock_actuel": 32,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 46,
+  "fields": {
+    "code_barres": "0760263631721",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "13.56",
+    "prix_TTC": "16.27",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 46,
+    "stock_minimum": 1,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 47,
+  "fields": {
+    "code_barres": "0615958495282",
+    "nom": "Legumes",
+    "description": "",
+    "prix_HT": "1.82",
+    "prix_TTC": "2.00",
+    "taux_TVA": "0.002",
+    "categorie": "Boissons",
+    "unite_mesure": "Boite",
+    "stock_actuel": 9,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 48,
+  "fields": {
+    "code_barres": "3203814493242",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "11.42",
+    "prix_TTC": "12.56",
+    "taux_TVA": "0.002",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 15,
+    "stock_minimum": 9,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 49,
+  "fields": {
+    "code_barres": "8912393027773",
+    "nom": "Legumes",
+    "description": "",
+    "prix_HT": "18.47",
+    "prix_TTC": "19.49",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Unite",
+    "stock_actuel": 44,
+    "stock_minimum": 1,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 50,
+  "fields": {
+    "code_barres": "0973478531249",
+    "nom": "Chocolat",
+    "description": "",
+    "prix_HT": "2.59",
+    "prix_TTC": "2.85",
+    "taux_TVA": "0.001",
+    "categorie": "Fruits",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 18,
+    "stock_minimum": 9,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 51,
+  "fields": {
+    "code_barres": "6320434726045",
+    "nom": "Cereales",
+    "description": "",
+    "prix_HT": "12.83",
+    "prix_TTC": "13.10",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 30,
+    "stock_minimum": 2,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 52,
+  "fields": {
+    "code_barres": "7246920832596",
+    "nom": "Pain",
+    "description": "",
+    "prix_HT": "11.31",
+    "prix_TTC": "13.57",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Boite",
+    "stock_actuel": 24,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 53,
+  "fields": {
+    "code_barres": "1376241033645",
+    "nom": "Fromage",
+    "description": "",
+    "prix_HT": "9.62",
+    "prix_TTC": "9.82",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Litre",
+    "stock_actuel": 43,
+    "stock_minimum": 6,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 54,
+  "fields": {
+    "code_barres": "0940219781536",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "2.02",
+    "prix_TTC": "2.42",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Unite",
+    "stock_actuel": 48,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 55,
+  "fields": {
+    "code_barres": "7665375535081",
+    "nom": "Fromage",
+    "description": "",
+    "prix_HT": "9.46",
+    "prix_TTC": "10.41",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Kg",
+    "stock_actuel": 1,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 56,
+  "fields": {
+    "code_barres": "2310785347436",
+    "nom": "Lait",
+    "description": "",
+    "prix_HT": "0.73",
+    "prix_TTC": "0.88",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 29,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 57,
+  "fields": {
+    "code_barres": "3799752894085",
+    "nom": "Banane",
+    "description": "",
+    "prix_HT": "15.94",
+    "prix_TTC": "16.27",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Kg",
+    "stock_actuel": 45,
+    "stock_minimum": 7,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 58,
+  "fields": {
+    "code_barres": "9592570845361",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "9.66",
+    "prix_TTC": "11.59",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 41,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 59,
+  "fields": {
+    "code_barres": "1358575379744",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "13.68",
+    "prix_TTC": "13.97",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Kg",
+    "stock_actuel": 35,
+    "stock_minimum": 3,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 60,
+  "fields": {
+    "code_barres": "7250320474448",
+    "nom": "Oeufs",
+    "description": "",
+    "prix_HT": "9.56",
+    "prix_TTC": "11.47",
+    "taux_TVA": "0.002",
+    "categorie": "Epicerie",
+    "unite_mesure": "Boite",
+    "stock_actuel": 26,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 61,
+  "fields": {
+    "code_barres": "2983138881450",
+    "nom": "Chocolat",
+    "description": "",
+    "prix_HT": "1.43",
+    "prix_TTC": "1.72",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Unite",
+    "stock_actuel": 7,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 62,
+  "fields": {
+    "code_barres": "0596528379002",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "1.50",
+    "prix_TTC": "1.65",
+    "taux_TVA": "0.002",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 11,
+    "stock_minimum": 6,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 63,
+  "fields": {
+    "code_barres": "7882187034414",
+    "nom": "Poisson",
+    "description": "",
+    "prix_HT": "1.31",
+    "prix_TTC": "1.38",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Kg",
+    "stock_actuel": 4,
+    "stock_minimum": 4,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 64,
+  "fields": {
+    "code_barres": "4101801805322",
+    "nom": "Lait",
+    "description": "",
+    "prix_HT": "13.99",
+    "prix_TTC": "16.79",
+    "taux_TVA": "0.000",
+    "categorie": "Legumes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 32,
+    "stock_minimum": 2,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 65,
+  "fields": {
+    "code_barres": "4687345451555",
+    "nom": "Viande",
+    "description": "",
+    "prix_HT": "4.24",
+    "prix_TTC": "4.33",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Litre",
+    "stock_actuel": 44,
+    "stock_minimum": 5,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 66,
+  "fields": {
+    "code_barres": "8654500202752",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "5.57",
+    "prix_TTC": "5.69",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Unite",
+    "stock_actuel": 14,
+    "stock_minimum": 7,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 67,
+  "fields": {
+    "code_barres": "9451331913824",
+    "nom": "Soda",
+    "description": "",
+    "prix_HT": "12.27",
+    "prix_TTC": "13.50",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Boite",
+    "stock_actuel": 36,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 68,
+  "fields": {
+    "code_barres": "9809109023962",
+    "nom": "Yaourt",
+    "description": "",
+    "prix_HT": "1.73",
+    "prix_TTC": "2.08",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Litre",
+    "stock_actuel": 29,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 69,
+  "fields": {
+    "code_barres": "3546860407022",
+    "nom": "Oeufs",
+    "description": "",
+    "prix_HT": "7.40",
+    "prix_TTC": "8.88",
+    "taux_TVA": "0.002",
+    "categorie": "Laitiers",
+    "unite_mesure": "Boite",
+    "stock_actuel": 13,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 70,
+  "fields": {
+    "code_barres": "1921095672534",
+    "nom": "Cafe",
+    "description": "",
+    "prix_HT": "9.00",
+    "prix_TTC": "10.80",
+    "taux_TVA": "0.000",
+    "categorie": "Boissons",
+    "unite_mesure": "Kg",
+    "stock_actuel": 10,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 71,
+  "fields": {
+    "code_barres": "9019676721036",
+    "nom": "Banane",
+    "description": "",
+    "prix_HT": "3.59",
+    "prix_TTC": "3.79",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Boite",
+    "stock_actuel": 28,
+    "stock_minimum": 2,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 72,
+  "fields": {
+    "code_barres": "0105412938012",
+    "nom": "Chocolat",
+    "description": "",
+    "prix_HT": "10.04",
+    "prix_TTC": "11.04",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Kg",
+    "stock_actuel": 35,
+    "stock_minimum": 1,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 73,
+  "fields": {
+    "code_barres": "1514473725076",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "1.18",
+    "prix_TTC": "1.20",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Unite",
+    "stock_actuel": 6,
+    "stock_minimum": 6,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 74,
+  "fields": {
+    "code_barres": "3855301857690",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "4.86",
+    "prix_TTC": "4.96",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 38,
+    "stock_minimum": 4,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 75,
+  "fields": {
+    "code_barres": "9489321738797",
+    "nom": "Yaourt",
+    "description": "",
+    "prix_HT": "15.61",
+    "prix_TTC": "15.94",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Kg",
+    "stock_actuel": 2,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 76,
+  "fields": {
+    "code_barres": "8073945900521",
+    "nom": "Orange",
+    "description": "",
+    "prix_HT": "13.30",
+    "prix_TTC": "14.03",
+    "taux_TVA": "0.000",
+    "categorie": "Boissons",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 27,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 77,
+  "fields": {
+    "code_barres": "3613869570096",
+    "nom": "Orange",
+    "description": "",
+    "prix_HT": "17.37",
+    "prix_TTC": "18.33",
+    "taux_TVA": "0.001",
+    "categorie": "Fruits",
+    "unite_mesure": "Litre",
+    "stock_actuel": 10,
+    "stock_minimum": 6,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 78,
+  "fields": {
+    "code_barres": "8187744172075",
+    "nom": "Salade",
+    "description": "",
+    "prix_HT": "10.91",
+    "prix_TTC": "13.09",
+    "taux_TVA": "0.001",
+    "categorie": "Viandes",
+    "unite_mesure": "Litre",
+    "stock_actuel": 18,
+    "stock_minimum": 3,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 79,
+  "fields": {
+    "code_barres": "6399286266181",
+    "nom": "Sucre",
+    "description": "",
+    "prix_HT": "4.49",
+    "prix_TTC": "4.58",
+    "taux_TVA": "0.001",
+    "categorie": "Viandes",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 20,
+    "stock_minimum": 6,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 80,
+  "fields": {
+    "code_barres": "8664954813363",
+    "nom": "Pomme",
+    "description": "",
+    "prix_HT": "1.81",
+    "prix_TTC": "1.85",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 24,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 81,
+  "fields": {
+    "code_barres": "6133891832915",
+    "nom": "Huile",
+    "description": "",
+    "prix_HT": "1.16",
+    "prix_TTC": "1.22",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Unite",
+    "stock_actuel": 37,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 82,
+  "fields": {
+    "code_barres": "2628425400279",
+    "nom": "The",
+    "description": "",
+    "prix_HT": "18.12",
+    "prix_TTC": "19.93",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Boite",
+    "stock_actuel": 4,
+    "stock_minimum": 8,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 83,
+  "fields": {
+    "code_barres": "1992488939197",
+    "nom": "Jus",
+    "description": "",
+    "prix_HT": "0.57",
+    "prix_TTC": "0.58",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Kg",
+    "stock_actuel": 26,
+    "stock_minimum": 1,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 84,
+  "fields": {
+    "code_barres": "2444175226895",
+    "nom": "Viande",
+    "description": "",
+    "prix_HT": "18.14",
+    "prix_TTC": "18.52",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Boite",
+    "stock_actuel": 47,
+    "stock_minimum": 2,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 85,
+  "fields": {
+    "code_barres": "1427667382951",
+    "nom": "Legumes",
+    "description": "",
+    "prix_HT": "19.85",
+    "prix_TTC": "20.27",
+    "taux_TVA": "0.002",
+    "categorie": "Legumes",
+    "unite_mesure": "Unite",
+    "stock_actuel": 13,
+    "stock_minimum": 10,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 86,
+  "fields": {
+    "code_barres": "9419510029131",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "14.64",
+    "prix_TTC": "14.95",
+    "taux_TVA": "0.000",
+    "categorie": "Viandes",
+    "unite_mesure": "Litre",
+    "stock_actuel": 8,
+    "stock_minimum": 10,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 87,
+  "fields": {
+    "code_barres": "3843529959061",
+    "nom": "Cereales",
+    "description": "",
+    "prix_HT": "15.62",
+    "prix_TTC": "16.48",
+    "taux_TVA": "0.001",
+    "categorie": "Viandes",
+    "unite_mesure": "Kg",
+    "stock_actuel": 41,
+    "stock_minimum": 9,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 88,
+  "fields": {
+    "code_barres": "3677639716273",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "1.44",
+    "prix_TTC": "1.58",
+    "taux_TVA": "0.002",
+    "categorie": "Fruits",
+    "unite_mesure": "Unite",
+    "stock_actuel": 16,
+    "stock_minimum": 8,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 89,
+  "fields": {
+    "code_barres": "3366115898916",
+    "nom": "Tomate",
+    "description": "",
+    "prix_HT": "9.90",
+    "prix_TTC": "10.44",
+    "taux_TVA": "0.000",
+    "categorie": "Laitiers",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 41,
+    "stock_minimum": 10,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 90,
+  "fields": {
+    "code_barres": "0975213634011",
+    "nom": "Tomate",
+    "description": "",
+    "prix_HT": "6.54",
+    "prix_TTC": "6.68",
+    "taux_TVA": "0.001",
+    "categorie": "Boissons",
+    "unite_mesure": "Unite",
+    "stock_actuel": 32,
+    "stock_minimum": 1,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 91,
+  "fields": {
+    "code_barres": "8785852370188",
+    "nom": "Viande",
+    "description": "",
+    "prix_HT": "19.74",
+    "prix_TTC": "21.71",
+    "taux_TVA": "0.001",
+    "categorie": "Legumes",
+    "unite_mesure": "Boite",
+    "stock_actuel": 30,
+    "stock_minimum": 2,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 92,
+  "fields": {
+    "code_barres": "6491585869877",
+    "nom": "Beurre",
+    "description": "",
+    "prix_HT": "11.90",
+    "prix_TTC": "12.15",
+    "taux_TVA": "0.000",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Kg",
+    "stock_actuel": 38,
+    "stock_minimum": 3,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 93,
+  "fields": {
+    "code_barres": "2191276370682",
+    "nom": "Biere",
+    "description": "",
+    "prix_HT": "13.76",
+    "prix_TTC": "14.05",
+    "taux_TVA": "0.001",
+    "categorie": "Viandes",
+    "unite_mesure": "Kg",
+    "stock_actuel": 14,
+    "stock_minimum": 5,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 94,
+  "fields": {
+    "code_barres": "9134159199470",
+    "nom": "Pain",
+    "description": "",
+    "prix_HT": "9.06",
+    "prix_TTC": "9.56",
+    "taux_TVA": "0.000",
+    "categorie": "Fruits",
+    "unite_mesure": "Kg",
+    "stock_actuel": 21,
+    "stock_minimum": 1,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 95,
+  "fields": {
+    "code_barres": "2565842989236",
+    "nom": "Biscuits",
+    "description": "",
+    "prix_HT": "4.12",
+    "prix_TTC": "4.21",
+    "taux_TVA": "0.002",
+    "categorie": "Laitiers",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 7,
+    "stock_minimum": 6,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 96,
+  "fields": {
+    "code_barres": "8393457714225",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "15.02",
+    "prix_TTC": "18.02",
+    "taux_TVA": "0.000",
+    "categorie": "Epicerie",
+    "unite_mesure": "Litre",
+    "stock_actuel": 50,
+    "stock_minimum": 3,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 97,
+  "fields": {
+    "code_barres": "7625933837746",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "17.05",
+    "prix_TTC": "20.46",
+    "taux_TVA": "0.001",
+    "categorie": "Laitiers",
+    "unite_mesure": "Paquet",
+    "stock_actuel": 24,
+    "stock_minimum": 2,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 98,
+  "fields": {
+    "code_barres": "6647157873259",
+    "nom": "Vin",
+    "description": "",
+    "prix_HT": "2.04",
+    "prix_TTC": "2.15",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Kg",
+    "stock_actuel": 25,
+    "stock_minimum": 7,
+    "actif": false
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 99,
+  "fields": {
+    "code_barres": "7675312547511",
+    "nom": "Pates",
+    "description": "",
+    "prix_HT": "10.97",
+    "prix_TTC": "12.07",
+    "taux_TVA": "0.001",
+    "categorie": "Boulangerie",
+    "unite_mesure": "Litre",
+    "stock_actuel": 2,
+    "stock_minimum": 1,
+    "actif": true
+  }
+},
+{
+  "model": "facturation.article",
+  "pk": 100,
+  "fields": {
+    "code_barres": "4369380030632",
+    "nom": "Soda",
+    "description": "",
+    "prix_HT": "6.06",
+    "prix_TTC": "6.19",
+    "taux_TVA": "0.001",
+    "categorie": "Epicerie",
+    "unite_mesure": "Boite",
+    "stock_actuel": 27,
+    "stock_minimum": 6,
+    "actif": false
+  }
+}
+]

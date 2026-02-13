@@ -1,0 +1,98 @@
+[
+{
+  "model": "facturation.detailfacture",
+  "pk": 1,
+  "fields": {
+    "facture": 1,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 2,
+  "fields": {
+    "facture": 2,
+    "article": 71,
+    "quantite": 1,
+    "prix_unitaire": "3.79",
+    "remise": "0.00",
+    "total_ligne": "3.79"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 3,
+  "fields": {
+    "facture": 3,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 4,
+  "fields": {
+    "facture": 4,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 5,
+  "fields": {
+    "facture": 5,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 6,
+  "fields": {
+    "facture": 6,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 7,
+  "fields": {
+    "facture": 7,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+},
+{
+  "model": "facturation.detailfacture",
+  "pk": 8,
+  "fields": {
+    "facture": 8,
+    "article": 1,
+    "quantite": 1,
+    "prix_unitaire": "150.00",
+    "remise": "0.00",
+    "total_ligne": "150.00"
+  }
+}
+]

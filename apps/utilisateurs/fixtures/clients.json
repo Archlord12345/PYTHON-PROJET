@@ -1,0 +1,26 @@
+[
+{
+  "model": "facturation.client",
+  "pk": 1,
+  "fields": {
+    "nom": "Client de passage",
+    "prenom": null,
+    "type": "Occasionnel",
+    "email": null,
+    "telephone": null,
+    "adresse": null
+  }
+},
+{
+  "model": "facturation.client",
+  "pk": 2,
+  "fields": {
+    "nom": "marri",
+    "prenom": "",
+    "type": "Occasionnel",
+    "email": null,
+    "telephone": null,
+    "adresse": null
+  }
+}
+]

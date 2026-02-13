@@ -34,20 +34,18 @@ class TvaPercentMixin:
 class ArticleFormCreate(TvaPercentMixin, forms.ModelForm):
     """Formulaire pour la création d'articles."""
 
-    TVA_CHOICES = [
-        ("0", "0%"),
-        ("2.1", "2,1%"),
-        ("5.5", "5,5%"),
-        ("10", "10%"),
-        ("20", "20%"),
-    ]
-
-    taux_TVA = forms.ChoiceField(
-        choices=TVA_CHOICES,
-        initial="5.5",
-        widget=forms.Select(
+    taux_TVA = forms.DecimalField(
+        min_value=0,
+        max_value=100,
+        decimal_places=1,
+        initial=5.5,
+        widget=forms.NumberInput(
             attrs={
                 "class": FIELD_CLASS,
+                "placeholder": "Ex: 5.5",
+                "step": "0.1",
+                "min": "0",
+                "max": "100",
             }
         ),
     )
@@ -59,8 +57,8 @@ class ArticleFormCreate(TvaPercentMixin, forms.ModelForm):
             "nom",
             "description",
             "prix_HT",
-            "prix_TTC",
             "taux_TVA",
+            "prix_TTC",
             "categorie",
             "unite_mesure",
             "stock_actuel",
@@ -96,14 +94,7 @@ class ArticleFormCreate(TvaPercentMixin, forms.ModelForm):
                     "min": "0",
                 }
             ),
-            "prix_TTC": forms.NumberInput(
-                attrs={
-                    "class": FIELD_CLASS,
-                    "placeholder": "0.00",
-                    "step": "0.01",
-                    "min": "0",
-                }
-            ),
+            "prix_TTC": forms.HiddenInput(),
             "categorie": forms.Select(
                 attrs={
                     "class": FIELD_CLASS,
@@ -140,13 +131,17 @@ class ArticleFormCreate(TvaPercentMixin, forms.ModelForm):
 class ArticleFormEdit(TvaPercentMixin, forms.ModelForm):
     """Formulaire pour l'edition d'articles (sans code-barres)."""
 
-    TVA_CHOICES = ArticleFormCreate.TVA_CHOICES
-
-    taux_TVA = forms.ChoiceField(
-        choices=TVA_CHOICES,
-        widget=forms.Select(
+    taux_TVA = forms.DecimalField(
+        min_value=0,
+        max_value=100,
+        decimal_places=1,
+        widget=forms.NumberInput(
             attrs={
                 "class": FIELD_CLASS,
+                "placeholder": "Ex: 5.5",
+                "step": "0.1",
+                "min": "0",
+                "max": "100",
             }
         ),
     )
@@ -157,8 +152,8 @@ class ArticleFormEdit(TvaPercentMixin, forms.ModelForm):
             "nom",
             "description",
             "prix_HT",
-            "prix_TTC",
             "taux_TVA",
+            "prix_TTC",
             "categorie",
             "unite_mesure",
             "stock_actuel",
@@ -167,6 +162,18 @@ class ArticleFormEdit(TvaPercentMixin, forms.ModelForm):
         ]
         widgets = ArticleFormCreate.Meta.widgets.copy()
         widgets.pop("code_barres", None)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        prix_ht = cleaned_data.get("prix_HT")
+        taux_tva = cleaned_data.get("taux_TVA")
+
+        if prix_ht is not None and taux_tva is not None:
+            # Calcul automatique du prix TTC
+            prix_ttc = prix_ht * (Decimal("1") + taux_tva)
+            cleaned_data["prix_TTC"] = prix_ttc.quantize(Decimal("0.01"))
+
+        return cleaned_data
 
 
 # Alias pour compatibilite.

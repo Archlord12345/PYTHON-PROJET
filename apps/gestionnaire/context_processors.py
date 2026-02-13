@@ -13,45 +13,69 @@ def _safe_reverse(candidates, fallback="#"):
 def sidebar_context(request):
     """
     Context processor for the sidebar.
+    Filtre les éléments selon le rôle de l'utilisateur.
     """
-    items = [
+    # Déterminer le rôle de l'utilisateur
+    user_role = getattr(request.user, 'role', None) if request.user.is_authenticated else None
+    
+    # Tous les éléments de navigation
+    all_items = [
         {
             'id': 'dashboard',
             'label': 'Tableau de bord',
-            'url': reverse('home'),
+            'url': _safe_reverse(['gestionnaire:dashboard', 'home']),
             'icon': 'grid_view',
+            'roles': ['all'],  # Accessible à tous
         },
         {
             'id': 'caisse',
             'label': 'Caisse',
             'url': _safe_reverse(['caisse:index']),
             'icon': 'shopping_cart',
+            'roles': ['all'],  # Accessible à tous
         },
         {
             'id': 'articles',
             'label': 'Articles',
             'url': _safe_reverse(['articles:liste_articles']),
             'icon': 'inventory_2',
+            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
         },
         {
             'id': 'clients',
             'label': 'Clients',
             'url': _safe_reverse(['clients:index', 'clients:liste_clients']),
             'icon': 'group',
+            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
         },
         {
             'id': 'reports',
             'label': 'Rapports',
             'url': _safe_reverse(['report:report', 'report:index']),
             'icon': 'analytics',
+            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
         },
         {
             'id': 'settings',
             'label': 'Paramètres',
             'url': _safe_reverse(['parametre:index']),
             'icon': 'settings',
+            'roles': ['Administrateur'],  # Uniquement Admin
+        },
+        {
+            'id': 'users',
+            'label': 'Utilisateurs',
+            'url': _safe_reverse(['utilisateurs:index']),
+            'icon': 'admin_panel_settings',
+            'roles': ['Administrateur'],  # Uniquement Admin
         },
     ]
+    
+    # Filtrer les éléments selon le rôle
+    items = []
+    for item in all_items:
+        if 'all' in item['roles'] or user_role in item['roles']:
+            items.append(item)
 
     current_path = request.path or '/'
     for item in items:
@@ -59,11 +83,7 @@ def sidebar_context(request):
         if item_url == '/' or item_url == '#':
             item['is_active'] = current_path == '/'
         else:
-            # Ensure we match the full path segment, not just partial starts
-            # For example, /clients/ should match /clients/, /clients/create/, etc.
-            # But /articles/ should NOT match /clients/
             if current_path.startswith(item_url):
-                # Additional check: either exact match, or next char is /
                 remaining = current_path[len(item_url):]
                 item['is_active'] = remaining == '' or remaining.startswith('/')
             else:
@@ -73,4 +93,5 @@ def sidebar_context(request):
         'sidebar_items': items,
         'login_url': _safe_reverse(['authentification:login', 'login']),
         'logout_url': _safe_reverse(['authentification:logout', 'logout']),
+        'user_role': user_role,
     }

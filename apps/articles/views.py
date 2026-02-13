@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from django.views.decorators.http import require_GET
 from facturation.models import Article
 from .forms import ArticleFormCreate, ArticleFormEdit
 from .services import ArticleService
+from apps.gestionnaire.decorators import gestionnaire_required
 
 
 @login_required
@@ -24,6 +26,7 @@ def dashboard(request):
 
 
 @login_required
+@gestionnaire_required
 def liste_articles(request):
     """Affiche la liste des articles avec filtres"""
     articles = Article.objects.all()
@@ -82,6 +85,8 @@ def liste_articles(request):
     return render(request, 'articles/liste_articles.html', context)
 
 
+@login_required
+@gestionnaire_required
 def creer_article(request):
     """Crée un nouvel article"""
     if request.method == 'POST':
@@ -101,6 +106,8 @@ def creer_article(request):
     return render(request, 'articles/creer_article.html', {'form': form})
 
 
+@login_required
+@gestionnaire_required
 def editer_article(request, pk):
     """Édite un article existant"""
     article = get_object_or_404(Article, pk=pk)
@@ -124,6 +131,8 @@ def editer_article(request, pk):
     })
 
 
+@login_required
+@gestionnaire_required
 def supprimer_article(request, pk):
     """Supprime un article"""
     article = get_object_or_404(Article, pk=pk)
@@ -137,6 +146,20 @@ def supprimer_article(request, pk):
     return render(request, 'articles/confirmer_suppression.html', {'article': article})
 
 
+@login_required
+@gestionnaire_required
+def supprimer_tout_articles(request):
+    """Supprime tous les articles du catalogue"""
+    if request.method == 'POST':
+        count = Article.objects.count()
+        Article.objects.all().delete()
+        messages.success(request, f'{count} articles ont été supprimés du catalogue.')
+        return redirect('articles:liste_articles')
+    return redirect('articles:liste_articles')
+
+
+@login_required
+@gestionnaire_required
 def importer_articles(request):
     """Importe les articles depuis un fichier CSV"""
     import csv
@@ -213,6 +236,8 @@ def importer_articles(request):
     return render(request, 'articles/importer_articles.html')
 
 
+@login_required
+@gestionnaire_required
 def export_articles(request):
     """Exporte les articles en CSV"""
     import csv
