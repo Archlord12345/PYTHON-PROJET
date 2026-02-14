@@ -6,7 +6,7 @@
 <header class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-8">
   <div>
     <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Rapports & Analyses</h2>
-    <p class="text-slate-500 dark:text-zinc-400 text-sm mt-1">Statistiques et exports comptables</p>
+    <p class="text-slate-500 dark:text-zinc-400 text-sm mt-1">Statistiques et exports financiers</p>
   </div>
   <div class="flex flex-wrap gap-3">
     <div class="relative">
@@ -54,7 +54,7 @@
 
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
     <div class="lg:col-span-3 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200/80 dark:border-zinc-800 shadow-sm min-h-[300px] flex flex-col">
-      <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">Ventes par jour</h3>
+      <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">{{ sales_evolution_title }}</h3>
       <div class="flex-1">
         <canvas id="salesByDayChart" class="w-full h-full"></canvas>
       </div>
@@ -161,7 +161,7 @@
             <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">
               {{ rupture_articles|join:", " }}{% if rupture > rupture_articles|length %} et autres{% endif %} ne sont plus en stock.
             </p>
-            <button class="mt-3 text-xs font-bold text-red-600 dark:text-red-400 hover:underline"><a href="{% url 'articles:liste_articles' %}">Voir les produits</button>
+            <a href="{% url 'articles:liste_articles' %}" class="mt-3 inline-block text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Voir les produits</a>
           {% else %}
             <p class="text-xs text-red-700 dark:text-red-400/70 mt-1">Aucun produit en rupture.</p>
           {% endif %}

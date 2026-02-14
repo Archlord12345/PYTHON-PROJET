@@ -96,6 +96,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='utilisateur',
             name='role',
-            field=models.CharField(choices=[('Administrateur', 'Administrateur'), ('Gestionnaire', 'Gestionnaire'), ('Caissier', 'Caissier'), ('Comptable', 'Comptable')], max_length=50),
+            field=models.CharField(choices=[('Gestionnaire', 'Gestionnaire'), ('Caissier', 'Caissier')], max_length=50),
         ),
     ]

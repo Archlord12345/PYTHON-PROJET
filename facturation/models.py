@@ -31,15 +31,13 @@ class UtilisateurManager(BaseUserManager):
     def create_superuser(self, login, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', 'Administrateur')
+        extra_fields.setdefault('role', 'Gestionnaire')
         return self.create_user(login, password, **extra_fields)
 
 class Utilisateur(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
-        ("Administrateur", "Administrateur"),
         ("Gestionnaire", "Gestionnaire"),
         ("Caissier", "Caissier"),
-        ("Comptable", "Comptable"),
     ]
 
     login = models.CharField(max_length=50, unique=True)
@@ -173,7 +171,7 @@ class Facture(models.Model):
     montant_TTC = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     mode_paiement = models.CharField(max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True, null=True)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default="payee")
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT)
     caissier = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

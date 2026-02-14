@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 from django.db.models import Q
+from urllib.parse import urlencode
 from django.views.decorators.http import require_GET
 from facturation.models import Article
 from .forms import ArticleFormCreate, ArticleFormEdit
@@ -11,6 +13,7 @@ from apps.gestionnaire.decorators import gestionnaire_required
 
 
 @login_required
+@gestionnaire_required
 @require_GET
 def dashboard(request):
     """Affiche le dashboard avec statistiques"""
@@ -65,13 +68,40 @@ def liste_articles(request):
         db_field = '-' + db_field
         
     articles = articles.order_by(db_field)
+
+    # Pagination
+    page_sizes = [10, 25, 50]
+    page_size_raw = request.GET.get('page_size', '10')
+    try:
+        page_size = int(page_size_raw)
+    except ValueError:
+        page_size = 10
+    if page_size not in page_sizes:
+        page_size = 10
+    paginator = Paginator(articles, page_size)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    def build_query(**overrides):
+        params = request.GET.copy()
+        for key, value in overrides.items():
+            if value is None:
+                params.pop(key, None)
+            else:
+                params[key] = str(value)
+        return urlencode(params, doseq=True)
+
+    sort_urls = {}
+    for key in valid_sort_fields.keys():
+        next_order = 'desc' if (sort_by == key and order == 'asc') else 'asc'
+        sort_urls[key] = f"?{build_query(sort=key, order=next_order, page=1)}"
     
     # Comptage
     total_articles = Article.objects.count()
     stats = ArticleService.get_statistics()
     
     context = {
-        'articles': articles,
+        'articles': page_obj.object_list,
+        'page_obj': page_obj,
         'total_articles': total_articles,
         'search': search,
         'categorie': categorie,
@@ -80,6 +110,9 @@ def liste_articles(request):
         'show_inactive': show_inactive,
         'sort_by': sort_by,
         'order': order,
+        'sort_urls': sort_urls,
+        'page_sizes': page_sizes,
+        'current_page_size': page_size,
     }
     
     return render(request, 'articles/liste_articles.html', context)

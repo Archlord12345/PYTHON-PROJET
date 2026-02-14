@@ -2,8 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
+def _redirect_after_login(user):
+    role = getattr(user, "role", "")
+    if role == "Caissier":
+        return redirect("caisse:index")
+    return redirect("gestionnaire:dashboard")
+
 def login_view(request):
-    requested_role = request.GET.get('role', 'Caissier')
+    if request.user.is_authenticated:
+        return _redirect_after_login(request.user)
+
     if request.method == 'POST':
         login_val = request.POST.get('login')
         password = request.POST.get('password')
@@ -12,18 +20,16 @@ def login_view(request):
         user = authenticate(request, login=login_val, password=password)
         
         if user is not None:
+            if not user.is_active:
+                messages.error(request, "Compte desactive. Contactez un gestionnaire.")
+                return redirect("authentification:login")
             login(request, user)
-            # Redirect based on role if needed, or just to home/dashboard
-            if user.role == 'Caissier':
-                return redirect('caisse:index')
-            else:
-                return redirect('articles:liste_articles')
+            return _redirect_after_login(user)
         else:
             messages.error(request, "Identifiant ou mot de passe incorrect.")
     
     context = {
-        'role': requested_role,
-        'title': f"Connexion - {requested_role}"
+        'title': "Connexion"
     }
     return render(request, 'authentification/login.html', context)
 

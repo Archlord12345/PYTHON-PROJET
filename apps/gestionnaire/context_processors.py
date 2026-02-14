@@ -1,5 +1,5 @@
-from django.conf import settings
 from django.urls import NoReverseMatch, reverse
+from apps.parametre.models import Configuration
 
 
 def _safe_reverse(candidates, fallback="#"):
@@ -39,35 +39,35 @@ def sidebar_context(request):
             'label': 'Articles',
             'url': _safe_reverse(['articles:liste_articles']),
             'icon': 'inventory_2',
-            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
+            'roles': ['Gestionnaire'],
         },
         {
             'id': 'clients',
             'label': 'Clients',
             'url': _safe_reverse(['clients:index', 'clients:liste_clients']),
             'icon': 'group',
-            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
+            'roles': ['Gestionnaire'],
         },
         {
             'id': 'reports',
             'label': 'Rapports',
             'url': _safe_reverse(['report:report', 'report:index']),
             'icon': 'analytics',
-            'roles': ['Gestionnaire', 'Administrateur', 'Comptable'],
+            'roles': ['Gestionnaire'],
+        },
+        {
+            'id': 'users',
+            'label': 'Utilisateurs',
+            'url': _safe_reverse(['utilisateurs:index']),
+            'icon': 'manage_accounts',
+            'roles': ['Gestionnaire'],
         },
         {
             'id': 'settings',
             'label': 'Paramètres',
             'url': _safe_reverse(['parametre:index']),
             'icon': 'settings',
-            'roles': ['Administrateur'],  # Uniquement Admin
-        },
-        {
-            'id': 'users',
-            'label': 'Utilisateurs',
-            'url': _safe_reverse(['utilisateurs:index']),
-            'icon': 'admin_panel_settings',
-            'roles': ['Administrateur'],  # Uniquement Admin
+            'roles': ['Gestionnaire'],
         },
     ]
     
@@ -89,9 +89,24 @@ def sidebar_context(request):
             else:
                 item['is_active'] = False
 
+    try:
+        config = Configuration.objects.first()
+    except Exception:
+        config = None
+    store_name = (config.nom_magasin if config and config.nom_magasin else "Caisse Plus")
+    store_description = (
+        config.description_accueil
+        if config and config.description_accueil
+        else "L'intelligence au service de votre point de vente."
+    )
+    store_logo_url = config.logo.url if config and config.logo else None
+
     return {
         'sidebar_items': items,
         'login_url': _safe_reverse(['authentification:login', 'login']),
         'logout_url': _safe_reverse(['authentification:logout', 'logout']),
         'user_role': user_role,
+        'store_name': store_name,
+        'store_description': store_description,
+        'store_logo_url': store_logo_url,
     }

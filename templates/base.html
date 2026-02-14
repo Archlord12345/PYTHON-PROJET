@@ -31,7 +31,99 @@
                 {% block content %}{% endblock %}
             </main>
         </div>
+        <div id="app-notifications" class="fixed top-4 right-4 z-[9999] space-y-2"></div>
+        <div id="app-confirm-backdrop" class="hidden fixed inset-0 z-[10000] bg-black/50 backdrop-blur-sm">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 shadow-xl">
+                    <h3 id="app-confirm-title" class="text-lg font-semibold text-slate-900 dark:text-zinc-100">Confirmation</h3>
+                    <p id="app-confirm-message" class="mt-3 text-sm text-slate-600 dark:text-zinc-300"></p>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button id="app-confirm-cancel" type="button" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800">Annuler</button>
+                        <button id="app-confirm-ok" type="button" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Confirmer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% block extra_js %}{% endblock %}
+        <script>
+            (function () {
+                const container = document.getElementById('app-notifications');
+                const backdrop = document.getElementById('app-confirm-backdrop');
+                const confirmTitle = document.getElementById('app-confirm-title');
+                const confirmMessage = document.getElementById('app-confirm-message');
+                const confirmCancel = document.getElementById('app-confirm-cancel');
+                const confirmOk = document.getElementById('app-confirm-ok');
+
+                const palette = {
+                    success: 'border-green-200 bg-green-50 text-green-800 dark:border-green-900/40 dark:bg-green-900/20 dark:text-green-300',
+                    error: 'border-red-200 bg-red-50 text-red-800 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300',
+                    warning: 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300',
+                    info: 'border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-900/40 dark:bg-blue-900/20 dark:text-blue-300',
+                };
+
+                function show(message, type = 'info', timeout = 3200) {
+                    if (!container || !message) return;
+                    const key = palette[type] ? type : 'info';
+                    const el = document.createElement('div');
+                    el.className = `max-w-sm rounded-xl border px-4 py-3 text-sm shadow ${palette[key]}`;
+                    el.textContent = message;
+                    container.appendChild(el);
+                    window.setTimeout(() => {
+                        el.classList.add('opacity-0', 'translate-x-2', 'transition');
+                        window.setTimeout(() => el.remove(), 180);
+                    }, timeout);
+                }
+
+                function success(message, timeout) { show(message, 'success', timeout); }
+                function error(message, timeout) { show(message, 'error', timeout); }
+                function warning(message, timeout) { show(message, 'warning', timeout); }
+                function info(message, timeout) { show(message, 'info', timeout); }
+
+                function confirm(message, options = {}) {
+                    return new Promise((resolve) => {
+                        if (!backdrop) {
+                            resolve(window.confirm(message));
+                            return;
+                        }
+                        confirmTitle.textContent = options.title || 'Confirmation';
+                        confirmMessage.textContent = message || 'Confirmer cette action ?';
+                        confirmOk.textContent = options.confirmText || 'Confirmer';
+                        confirmOk.className = `px-4 py-2 rounded-lg text-white ${options.confirmClass || 'bg-blue-600 hover:bg-blue-700'}`;
+                        backdrop.classList.remove('hidden');
+
+                        function cleanup(result) {
+                            backdrop.classList.add('hidden');
+                            confirmOk.removeEventListener('click', onOk);
+                            confirmCancel.removeEventListener('click', onCancel);
+                            backdrop.removeEventListener('click', onBackdrop);
+                            resolve(result);
+                        }
+
+                        function onOk() { cleanup(true); }
+                        function onCancel() { cleanup(false); }
+                        function onBackdrop(e) {
+                            if (e.target === backdrop) cleanup(false);
+                        }
+
+                        confirmOk.addEventListener('click', onOk);
+                        confirmCancel.addEventListener('click', onCancel);
+                        backdrop.addEventListener('click', onBackdrop);
+                    });
+                }
+
+                window.AppNotify = { show, success, error, warning, info, confirm };
+            })();
+        </script>
+        {% if messages %}
+        <script>
+            (function () {
+                if (!window.AppNotify) return;
+                {% for message in messages %}
+                window.AppNotify.show("{{ message|escapejs }}", "{% if 'error' in message.tags %}error{% elif 'warning' in message.tags %}warning{% elif 'success' in message.tags %}success{% else %}info{% endif %}");
+                {% endfor %}
+            })();
+        </script>
+        {% endif %}
         <script>
             (function () {
                 const btn = document.querySelector('[data-theme-toggle]');

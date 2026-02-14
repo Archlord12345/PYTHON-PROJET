@@ -18,25 +18,50 @@
 - Répartition des modes de paiement
 - Alertes de stock bas
 
-### �👥 Système de Rôles Avancé
-Trois types de comptes avec accès différenciés :
+### 🔐 Guide de connexion (ultra simple)
+Tu veux juste te connecter sans te poser de questions. Fais exactement ça :
+
+1. Depuis la racine du projet, restaure les données de démo :
+   ```bash
+   ./restore_data.sh
+   ```
+2. Démarre l'application :
+   ```bash
+   ./run.sh
+   ```
+3. Ouvre le navigateur sur `http://127.0.0.1:8000/`.
+4. Connecte-toi avec l'un de ces comptes :
+
+| Login | Mot de passe | Rôle |
+|-------|--------------|------|
+| `gestionnaire2` | `admin` | Gestionnaire |
+| `gestionnaire` | `gestionnaire` | Gestionnaire |
+| `caissiere` | `caissiere` | Caissier |
+
+5. Si aucun compte ne marche, crée un compte local :
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+Accès par rôle :
 
 | Rôle | Dashboard | Caisse | Articles | Clients | Rapports | Paramètres | Utilisateurs |
 |------|-----------|--------|----------|---------|----------|------------|--------------|
 | **Caissier** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Gestionnaire** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| **Administrateur** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Gestionnaire** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-### 🔐 Comptes par défaut
+### 📁 Transfert de Données
+Pour transférer une base entre machines :
+```bash
+# Machine source
+./backup_data.sh
 
-| Login | Mot de passe | Rôle |
-|-------|--------------|------|
-| `admin` | `admin` | Administrateur |
-| `gestionnaire` | `gestionnaire` | Gestionnaire |
-| `caissiere` | `caissiere` | Caissier |
+# Machine cible
+./restore_data.sh
+```
 
-### 👤 Module Utilisateurs (Admin uniquement)
-- Créer des comptes (Caissier, Gestionnaire, Administrateur)
+### 👤 Module Utilisateurs (Gestionnaire)
+- Créer des comptes (Caissier, Gestionnaire)
 - Modifier les utilisateurs existants
 - Activer/Désactiver des comptes
 - Supprimer des utilisateurs
@@ -53,22 +78,7 @@ Trois types de comptes avec accès différenciés :
 - **TVA personnalisable** : Saisie libre du taux de TVA (pas seulement les valeurs prédéfinies)
 - Affichage en temps réel du prix TTC calculé
 
-### 📁 Transfert de Données
-Système de fixtures pour faciliter le transfert entre machines :
-```bash
-# Sauvegarder les données
-./backup_data.sh
 
-# Restaurer sur une nouvelle machine
-python manage.py loaddata apps/utilisateurs/fixtures/users.json
-python manage.py loaddata apps/utilisateurs/fixtures/articles.json
-```
-
-## 👥 Chefs d'équipe
-
-- `authentification` + `gestionnaire` : Tchinda (chef), Miguel (sous-chef)
-- `caisse` : Charles
-- `phone` : Nghomsi
 
 ## 🗃️ Modèle de données
 
@@ -79,7 +89,7 @@ python manage.py loaddata apps/utilisateurs/fixtures/articles.json
 - **📋 Champs** :
   - `nom` : Nom du client
   - `prenom` : Prénom du client
-  - `type` : Type de client (enregistre/anonyme/occasionnel)
+  - `type` : Type de client (enregistre/anonyme)
   - `email` : Adresse email (unique, optionnel)
   - `telephone` : Numéro de téléphone (optionnel)
   - `adresse` : Adresse postale (optionnel)
@@ -89,7 +99,7 @@ python manage.py loaddata apps/utilisateurs/fixtures/articles.json
 - **📋 Champs** :
   - `login` : Identifiant de connexion (unique)
   - `password` : Mot de passe (hashé)
-  - `role` : Rôle de l'utilisateur (Administrateur/Gestionnaire/Caissier)
+  - `role` : Rôle de l'utilisateur (Gestionnaire/Caissier)
   - `is_active` : Statut du compte
   - `date_joined` : Date de création
 
@@ -200,7 +210,7 @@ Le package `psycopg2-binary` est déjà inclus dans `requirements.txt`
    python manage.py migrate
    ```
 
-6. **Charger les données de démonstration (optionnel)** :
+6. **Charger les données de démonstration (optionnel mais recommandé pour se connecter avec les comptes ci-dessus)** :
    ```bash
    python manage.py loaddata apps/utilisateurs/fixtures/users.json
    python manage.py loaddata apps/utilisateurs/fixtures/articles.json
@@ -249,8 +259,8 @@ facturation/
 │   ├── clients/             # Gestion des clients
 │   ├── articles/            # Gestion du catalogue
 │   ├── report/              # Rapports et statistiques
-│   ├── parametre/           # Paramètres système (Admin uniquement)
-│   ├── utilisateurs/        # Gestion des utilisateurs (Admin uniquement)
+│   ├── parametre/           # Paramètres système (Gestionnaire)
+│   ├── utilisateurs/        # Gestion des utilisateurs (Gestionnaire)
 │   └── gestionnaire/        # Dashboard et navigation
 ├── facturation/             # Configuration du projet
 ├── media/                   # Fichiers téléchargés
@@ -266,8 +276,8 @@ facturation/
 - `clients` : Gestion des clients et historique d'achats
 - `articles` : Catalogue produits, gestion des stocks
 - `report` : Rapports de ventes, statistiques
-- `parametre` : Configuration système (Admin uniquement)
-- `utilisateurs` : Création et gestion des comptes (Admin uniquement)
+- `parametre` : Configuration système (Gestionnaire)
+- `utilisateurs` : Création et gestion des comptes (Gestionnaire)
 - `gestionnaire` : Dashboard, sidebar, navigation
 
 ## 🌐 Routes principales
@@ -275,13 +285,13 @@ facturation/
 | URL | Description | Accès |
 |-----|-------------|-------|
 | `/auth/login/` | Page de connexion | Public |
-| `/gestionnaire/` | Dashboard | Tous |
+| `/dashboard/` | Dashboard | Tous |
 | `/caisse/` | Caisse | Tous |
-| `/articles/` | Gestion des articles | Gestionnaire, Admin |
-| `/clients/` | Gestion des clients | Gestionnaire, Admin |
-| `/report/` | Rapports | Gestionnaire, Admin |
-| `/parametre/` | Paramètres | Admin uniquement |
-| `/utilisateurs/` | Gestion des utilisateurs | Admin uniquement |
+| `/articles/` | Gestion des articles | Gestionnaire |
+| `/clients/` | Gestion des clients | Gestionnaire |
+| `/rapport/` | Rapports | Gestionnaire |
+| `/parametre/` | Paramètres | Gestionnaire |
+| `/utilisateurs/` | Gestion des utilisateurs | Gestionnaire |
 
 ## 💻 Développement
 
@@ -321,11 +331,7 @@ Ce projet utilise `django-tailwind`, une intégration de Tailwind CSS pour Djang
 
 ### Restauration
 ```bash
-python manage.py loaddata apps/utilisateurs/fixtures/users.json
-python manage.py loaddata apps/utilisateurs/fixtures/articles.json
-python manage.py loaddata apps/utilisateurs/fixtures/clients.json
-python manage.py loaddata apps/utilisateurs/fixtures/factures.json
-python manage.py loaddata apps/utilisateurs/fixtures/details.json
+./restore_data.sh
 ```
 
 ## 👥 Travail d'équipe et bonnes pratiques

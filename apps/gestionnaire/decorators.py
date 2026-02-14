@@ -5,7 +5,7 @@ from django.contrib import messages
 
 def gestionnaire_required(view_func):
     """
-    Décorateur qui restreint l'accès aux gestionnaires et administrateurs.
+    Décorateur qui restreint l'accès aux gestionnaires.
     Les caissiers sont redirigés vers la caisse.
     """
     @wraps(view_func)
@@ -13,8 +13,8 @@ def gestionnaire_required(view_func):
         if not request.user.is_authenticated:
             return redirect('authentification:login')
         
-        # Vérifier si l'utilisateur est un gestionnaire ou administrateur
-        if request.user.role in ['Gestionnaire', 'Administrateur', 'Comptable']:
+        # Vérifier si l'utilisateur est un gestionnaire
+        if request.user.role == 'Gestionnaire':
             return view_func(request, *args, **kwargs)
         
         # Si c'est un caissier, rediriger vers la caisse
@@ -24,26 +24,6 @@ def gestionnaire_required(view_func):
         
         # Par défaut, rediriger vers la caisse
         return redirect('caisse:index')
-    
-    return _wrapped_view
-
-
-def admin_required(view_func):
-    """
-    Décorateur qui restreint l'accès uniquement aux administrateurs.
-    """
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('authentification:login')
-        
-        # Vérifier si l'utilisateur est un administrateur
-        if request.user.role == 'Administrateur':
-            return view_func(request, *args, **kwargs)
-        
-        # Sinon, message d'erreur et redirection
-        messages.error(request, "Accès réservé aux administrateurs.")
-        return redirect('gestionnaire:dashboard')
     
     return _wrapped_view
 

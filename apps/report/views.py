@@ -220,8 +220,12 @@ def report_view(request):
         while cur <= end_hour:
             buckets.append(cur)
             cur += timedelta(hours=1)
+
         def _label(bucket):
             return bucket.strftime("%Hh")
+
+        def _lookup_key(bucket):
+            return bucket
     elif period == "year":
         trunc = TruncMonth("date_facture")
         bucket_key = "month"
@@ -235,8 +239,12 @@ def report_view(request):
             .order_by(bucket_key)
         )
         buckets = [start.replace(month=m, day=1, hour=0, minute=0, second=0, microsecond=0) for m in range(1, 13)]
+
         def _label(bucket):
             return month_labels[bucket.month - 1]
+
+        def _lookup_key(bucket):
+            return bucket
     else:
         trunc = TruncDate("date_facture")
         bucket_key = "day"
@@ -250,27 +258,36 @@ def report_view(request):
             .order_by(bucket_key)
         )
         if period == "week":
-            buckets = [start + timedelta(days=i) for i in range(7)]
+            start_day = start.date()
+            buckets = [start_day + timedelta(days=i) for i in range(7)]
+
             def _label(bucket):
                 return weekday_labels[bucket.weekday()]
         elif period == "month":
             days_in_month = calendar.monthrange(start.year, start.month)[1]
-            buckets = [start.replace(day=1) + timedelta(days=i) for i in range(days_in_month)]
+            first_day = start.date().replace(day=1)
+            buckets = [first_day + timedelta(days=i) for i in range(days_in_month)]
+
             def _label(bucket):
                 return str(bucket.day).zfill(2)
         else:
             buckets = []
-            cur = start
-            while cur <= end:
+            cur = start.date()
+            end_day = end.date()
+            while cur <= end_day:
                 buckets.append(cur)
                 cur += timedelta(days=1)
+
             def _label(bucket):
                 return bucket.strftime("%d/%m")
+
+        def _lookup_key(bucket):
+            return bucket
 
     rows_by_bucket = {row[bucket_key]: row for row in sales_by_day_qs if row[bucket_key]}
     sales_by_day = []
     for bucket in buckets:
-        row = rows_by_bucket.get(bucket)
+        row = rows_by_bucket.get(_lookup_key(bucket))
         sales_by_day.append(
             {
                 "label": _label(bucket),
@@ -335,6 +352,12 @@ def report_view(request):
         "rupture": rupture,
         "rupture_articles": rupture_articles,
         "period": period,
+        "sales_evolution_title": {
+            "day": "Ventes et transactions par heure",
+            "week": "Ventes et transactions par jour",
+            "month": "Ventes et transactions sur le mois",
+            "year": "Ventes et transactions par mois",
+        }.get(period, "Evolution ventes et transactions"),
         "sales_by_day_json": json.dumps(sales_by_day),
         "sales_by_category_json": json.dumps(sales_by_category),
         "payments_chart_json": json.dumps(payments_chart),

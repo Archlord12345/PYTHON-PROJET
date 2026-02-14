@@ -65,7 +65,7 @@ Module complet de gestion des articles pour une application de facturation en Dj
 - Icônes et badges informatifs
 
 ### 9. **Contrôle d'accès**
-- 🔒 Accès réservé aux **Gestionnaires** et **Administrateurs**
+- 🔒 Accès réservé aux **Gestionnaires**
 - ❌ Les **Caissiers** n'ont pas accès à ce module
 - 🛡️ Décorateur `@gestionnaire_required` pour la protection des vues
 

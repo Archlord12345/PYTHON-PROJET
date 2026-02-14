@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portail - SuperMarket POS</title>
+    <title>Portail - {{ store_name|default:"Caisse Plus" }}</title>
     {% tailwind_css %}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -29,10 +29,26 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
+    <script>
+        (function () {
+            const root = document.documentElement;
+            const stored = localStorage.getItem('theme');
+            if (stored === 'dark') {
+                root.classList.add('dark');
+            } else {
+                root.classList.remove('dark');
+            }
+        })();
+    </script>
 </head>
 
 <body
-    class="bg-[#F3F7FA] min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-['Inter',_sans-serif]">
+    class="bg-[#F3F7FA] dark:bg-zinc-950 min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-['Inter',_sans-serif] text-slate-900 dark:text-zinc-100">
+    <button type="button" data-theme-toggle
+        class="fixed top-4 right-4 z-20 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white/90 dark:bg-zinc-900/90 text-slate-700 dark:text-zinc-200 text-sm font-medium">
+        <span class="dark:hidden">Mode sombre</span>
+        <span class="hidden dark:inline">Mode clair</span>
+    </button>
     <!-- Background subtle diagonal lines/texture -->
     <div class="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -44,60 +60,58 @@
     <div class="max-w-4xl w-full space-y-12 relative z-10">
         <!-- Logo and Title -->
         <div class="text-center space-y-4">
-            <div class="inline-block p-6 bg-white rounded-[2rem] shadow-sm border-[1.5px] border-[#22c55e]/30">
-                <img src="{% static 'img/logo_no_bg.png' %}" alt="Caisse Plus Logo"
+            <div class="inline-block p-6 bg-white dark:bg-zinc-900 rounded-[2rem] shadow-sm border-[1.5px] border-[#22c55e]/30 dark:border-zinc-800">
+                <img src="{% if store_logo_url %}{{ store_logo_url }}{% else %}{% static 'img/logo_no_bg.png' %}{% endif %}" alt="{{ store_name|default:'Caisse Plus' }} Logo"
                     class="h-28 w-auto mx-auto transform hover:scale-105 transition-transform duration-500">
             </div>
             <div class="space-y-1">
-                <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Caisse Plus</h1>
-                <p class="text-base text-slate-600 font-medium">L'intelligence au service de votre point de vente.</p>
+                <h1 class="text-4xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">{{ store_name|default:"Caisse Plus" }}</h1>
+                <p class="text-base text-slate-600 dark:text-zinc-400 font-medium">{{ store_description|default:"L'intelligence au service de votre point de vente." }}</p>
             </div>
         </div>
 
-        <!-- Role Selection Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
-            <!-- Portail Caisse Card -->
+        <!-- Single Access Portal -->
+        <div class="px-4">
             <div
-                class="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-50 flex flex-col items-center text-center space-y-6">
+                class="bg-white dark:bg-zinc-900 p-10 rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-50 dark:border-zinc-800 flex flex-col items-center text-center space-y-6">
                 <div class="space-y-2">
-                    <h2 class="text-2xl font-bold text-slate-900">Portail Caisse</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed max-w-[200px] mx-auto">Encaissements rapides,
-                        gestion des factures et client.</p>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-zinc-100">Portail de connexion unique</h2>
+                    <p class="text-slate-500 dark:text-zinc-400 text-sm leading-relaxed max-w-[480px] mx-auto">
+                        Entrez vos identifiants une seule fois. Le systeme detecte automatiquement votre role
+                        (Caissier ou Gestionnaire) et vous redirige vers votre espace.
+                    </p>
                 </div>
-                <a href="{% url 'authentification:login' %}?role=Caissier"
-                    class="inline-flex items-center gap-2 px-10 py-3.5 bg-[#00A65A] hover:bg-[#008d4c] text-white rounded-full font-bold text-sm transition-all shadow-lg shadow-[#00A65A]/20 hover:-translate-y-0.5">
-                    <span>Ouvrir la session</span>
+                <a href="{% url 'authentification:login' %}"
+                    class="inline-flex items-center gap-2 px-10 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-full font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5">
+                    <span>Se connecter</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                 </a>
-            </div>
-
-            <!-- Gestion de Stock Card -->
-            <div
-                class="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-50 flex flex-col items-center text-center space-y-6">
-                <div class="space-y-2">
-                    <h2 class="text-2xl font-bold text-slate-900">Gestion de Stock</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed max-w-[200px] mx-auto">Inventaire complet, articles
-                        et rapports d'analyse.</p>
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
+                    <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200">Caissiers actifs: {{ role_counts.caissiers }}</span>
+                    <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200">Gestionnaires actifs: {{ role_counts.gestionnaires }}</span>
                 </div>
-                <a href="{% url 'authentification:login' %}?role=Gestionnaire"
-                    class="inline-flex items-center gap-2 px-10 py-3.5 bg-[#FF6B6B] hover:bg-[#fa5252] text-white rounded-full font-bold text-sm transition-all shadow-lg shadow-[#FF6B6B]/20 hover:-translate-y-0.5">
-                    <span>Accéder au dashboard</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </a>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="text-center text-slate-400 text-[11px] font-medium pt-8">
+        <div class="text-center text-slate-400 dark:text-zinc-500 text-[11px] font-medium pt-8">
             &copy; 2026 ArchiProject. Système de Facturation Intelligent.
         </div>
     </div>
+    <script>
+        (function () {
+            const btn = document.querySelector('[data-theme-toggle]');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                const root = document.documentElement;
+                const isDark = root.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+        })();
+    </script>
 </body>
 
 </html>

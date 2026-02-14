@@ -16,10 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.conf import settings
+from django.conf.urls.static import static
+from facturation.models import Utilisateur
 
 def home_view(request):
-    return render(request, 'home.html')
+    if request.user.is_authenticated:
+        if getattr(request.user, "role", "") == "Caissier":
+            return redirect("caisse:index")
+        return redirect("gestionnaire:dashboard")
+
+    role_counts = {
+        "caissiers": Utilisateur.objects.filter(role="Caissier", is_active=True).count(),
+        "gestionnaires": Utilisateur.objects.filter(role="Gestionnaire", is_active=True).count(),
+    }
+    return render(request, "home.html", {"role_counts": role_counts})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,11 +40,14 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     # apps urls
     path('caisse/', include('apps.caisse.urls')),
-    path('gestionnaire/', include('apps.gestionnaire.urls')),
-    path('report/', include('apps.report.urls')),
+    path('dashboard/', include('apps.gestionnaire.urls')),
+    path('rapport/', include('apps.report.urls')),
     path('articles/', include('apps.articles.urls')),
     path('clients/', include('apps.clients.urls')),
     path('auth/', include('apps.authentification.urls')),
     path('parametre/', include('apps.parametre.urls')),
     path('utilisateurs/', include('apps.utilisateurs.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

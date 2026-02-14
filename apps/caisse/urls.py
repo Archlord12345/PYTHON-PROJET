@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('api/search/', views.search_articles, name='search_articles'),
     path('api/facture/create/', views.create_facture, name='create_facture'),
+    path('api/factures/recent/', views.recent_factures, name='recent_factures'),
 ]

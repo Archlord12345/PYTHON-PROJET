@@ -63,28 +63,28 @@
                     <thead class="bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
-                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=code_barres&order={% if sort_by == 'code_barres' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                <a href="{{ sort_urls.code_barres }}"
                                     class="flex items-center gap-1 hover:text-blue-600">
                                     Code-barres
                                     {% if sort_by == 'code_barres' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
                                 </a>
                             </th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
-                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=nom&order={% if sort_by == 'nom' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                <a href="{{ sort_urls.nom }}"
                                     class="flex items-center gap-1 hover:text-blue-600">
                                     Nom
                                     {% if sort_by == 'nom' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
                                 </a>
                             </th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-zinc-200">
-                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=categorie&order={% if sort_by == 'categorie' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                <a href="{{ sort_urls.categorie }}"
                                     class="flex items-center gap-1 hover:text-blue-600">
                                     Catégorie
                                     {% if sort_by == 'categorie' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
                                 </a>
                             </th>
                             <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-zinc-200">
-                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=prix&order={% if sort_by == 'prix' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                <a href="{{ sort_urls.prix }}"
                                     class="flex items-center justify-end gap-1 hover:text-blue-600">
                                     Prix HT
                                     {% if sort_by == 'prix' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
@@ -95,7 +95,7 @@
                             <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
                                 TVA</th>
                             <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700 dark:text-zinc-200">
-                                <a href="?search={{ search }}&categorie={{ categorie }}&sort=stock&order={% if sort_by == 'stock' and order == 'asc' %}desc{% else %}asc{% endif %}"
+                                <a href="{{ sort_urls.stock }}"
                                     class="flex items-center justify-center gap-1 hover:text-blue-600">
                                     Stock
                                     {% if sort_by == 'stock' %}{% if order == 'asc' %}↑{% else %}↓{% endif %}{% endif %}
@@ -109,7 +109,7 @@
                     </thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-zinc-800">
                         {% for article in articles %}
-                        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800 transition">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800 transition cursor-pointer" data-article-id="{{ article.id }}" data-article-row>
                             <td class="px-6 py-4">
                                 <span class="font-mono text-sm text-slate-700 dark:text-zinc-200">{{ article.code_barres }}</span>
                             </td>
@@ -117,8 +117,7 @@
                                 <div>
                                     <p class="font-medium text-slate-900 dark:text-zinc-100">{{ article.nom }}</p>
                                     {% if article.description %}
-                                    <p class="text-sm text-slate-500 dark:text-zinc-400">{{
-                                        article.description|truncatewords:8 }}</p>
+                                    <p class="text-sm text-slate-500 dark:text-zinc-400">{{ article.description|truncatewords:8 }}</p>
                                     {% endif %}
                                 </div>
                             </td>
@@ -179,47 +178,110 @@
                     </tbody>
                 </table>
             </div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-6 py-4 border-t border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/30">
+                <div class="text-sm text-slate-600 dark:text-zinc-400">
+                    Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                </div>
+                <div class="flex items-center gap-3">
+                    <form method="get" class="flex items-center gap-2">
+                        <input type="hidden" name="search" value="{{ search }}">
+                        <input type="hidden" name="categorie" value="{{ categorie }}">
+                        <input type="hidden" name="sort" value="{{ sort_by }}">
+                        <input type="hidden" name="order" value="{{ order }}">
+                        <label class="text-sm text-slate-600 dark:text-zinc-400">Articles par page</label>
+                        <select name="page_size" class="rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm px-2 py-1" onchange="this.form.submit()">
+                            {% for size in page_sizes %}
+                                <option value="{{ size }}" {% if size == current_page_size %}selected{% endif %}>{{ size }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                    <div class="flex items-center gap-2">
+                        {% if page_obj.has_previous %}
+                            <a class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900" href="?search={{ search|urlencode }}&categorie={{ categorie|urlencode }}&sort={{ sort_by }}&order={{ order }}&page_size={{ current_page_size }}&page={{ page_obj.previous_page_number }}">Précédent</a>
+                        {% else %}
+                            <span class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 text-slate-400">Précédent</span>
+                        {% endif %}
+                        <div class="flex items-center gap-1">
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                                    {% if num == page_obj.number %}
+                                        <span class="px-3 py-1.5 text-sm rounded-lg bg-blue-600 text-white">{{ num }}</span>
+                                    {% else %}
+                                        <a class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900" href="?search={{ search|urlencode }}&categorie={{ categorie|urlencode }}&sort={{ sort_by }}&order={{ order }}&page_size={{ current_page_size }}&page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% if page_obj.has_next %}
+                            <a class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900" href="?search={{ search|urlencode }}&categorie={{ categorie|urlencode }}&sort={{ sort_by }}&order={{ order }}&page_size={{ current_page_size }}&page={{ page_obj.next_page_number }}">Suivant</a>
+                        {% else %}
+                            <span class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-zinc-700 text-slate-400">Suivant</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    function deleteArticle(id, nom) {
-        if (confirm(`Êtes-vous sûr de vouloir supprimer l'article "${nom}" ?`)) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `/articles/supprimer/${id}/`;
+    async function deleteArticle(id, nom) {
+        const ok = await window.AppNotify.confirm(`Supprimer l'article "${nom}" ?`, {
+            title: 'Suppression article',
+            confirmText: 'Supprimer',
+            confirmClass: 'bg-red-600 hover:bg-red-700',
+        });
+        if (!ok) return;
 
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-            if (csrfToken) {
-                form.appendChild(csrfToken.cloneNode(true));
-            }
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/articles/supprimer/${id}/`;
 
-            document.body.appendChild(form);
-            form.submit();
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            form.appendChild(csrfToken.cloneNode(true));
         }
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
     function editArticle(id) {
         window.location.href = `/articles/editer/${id}/`;
     }
 
-    function deleteAllArticles() {
-        if (confirm('⚠️ ATTENTION !\n\nVous êtes sur le point de supprimer TOUS les articles du catalogue.\nCette action est irréversible.\n\nÊtes-vous sûr de vouloir continuer ?')) {
-            if (confirm('Confirmez une deuxième fois la suppression de tous les articles ?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{% url "articles:supprimer_tout" %}';
-
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-                if (csrfToken) {
-                    form.appendChild(csrfToken.cloneNode(true));
-                }
-
-                document.body.appendChild(form);
-                form.submit();
+    document.querySelectorAll('[data-article-row]').forEach(function(row) {
+        row.addEventListener('dblclick', function() {
+            const id = row.getAttribute('data-article-id');
+            if (id) {
+                editArticle(id);
             }
+        });
+    });
+
+    async function deleteAllArticles() {
+        const step1 = await window.AppNotify.confirm(
+            'Vous êtes sur le point de supprimer tous les articles. Cette action est irreversible.',
+            { title: 'Suppression massive', confirmText: 'Continuer', confirmClass: 'bg-amber-600 hover:bg-amber-700' }
+        );
+        if (!step1) return;
+        const step2 = await window.AppNotify.confirm(
+            'Confirmez une seconde fois la suppression complete.',
+            { title: 'Confirmation finale', confirmText: 'Tout supprimer', confirmClass: 'bg-red-600 hover:bg-red-700' }
+        );
+        if (!step2) return;
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{% url "articles:supprimer_tout" %}';
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            form.appendChild(csrfToken.cloneNode(true));
         }
+
+        document.body.appendChild(form);
+        form.submit();
     }
 </script>
 {% endblock %}

@@ -56,8 +56,13 @@ cleanup() {
 # Capturer les signaux d'arrêt
 trap cleanup INT TERM EXIT
 
-# Vérifier les dépendances
-if ! command_exists python3; then
+# Choisir l'interpréteur Python (venv prioritaire)
+PYTHON_BIN="python3"
+if [ -x "/home/zepe/Projets/projets_django/.venv/bin/python" ]; then
+    PYTHON_BIN="/home/zepe/Projets/projets_django/.venv/bin/python"
+elif [ -x ".venv/bin/python" ]; then
+    PYTHON_BIN=".venv/bin/python"
+elif ! command_exists python3; then
     error "Python 3 n'est pas installé. Veuillez l'installer avant de continuer."
 fi
 
@@ -68,7 +73,7 @@ fi
 
 # Lancer les migrations en arrière-plan
 info "Application des migrations de base de données..."
-python3 manage.py makemigrations && python3 manage.py migrate &
+"$PYTHON_BIN" manage.py migrate &
 MIGRATION_PID=$!
 
 # Attendre que les migrations soient terminées avant de démarrer le serveur
@@ -80,7 +85,7 @@ success "Migrations appliquées avec succès"
 
 # Démarrer le serveur Django en arrière-plan
 info "Démarrage du serveur Django..."
-python3 manage.py runserver &
+"$PYTHON_BIN" manage.py runserver &
 SERVER_PID=$!
 
 # Vérifier que le serveur a démarré
@@ -93,14 +98,14 @@ success "Serveur Django démarré avec succès (PID: $SERVER_PID)"
 # Compiler et démarrer Tailwind CSS si le dossier tailwind est présent
 if [ -d "theme/static_src" ]; then
     info "Compilation de Tailwind CSS..."
-    python3 manage.py tailwind build &
+    "$PYTHON_BIN" manage.py tailwind build &
     TAILWIND_PID=$!
     wait $TAILWIND_PID
     
     if [ $? -eq 0 ]; then
         success "Compilation de Tailwind CSS terminée"
         info "Démarrage du watcher Tailwind CSS..."
-        python3 manage.py tailwind start &
+        "$PYTHON_BIN" manage.py tailwind start &
         TAILWIND_PID=$!
         success "Watcher Tailwind CSS démarré (PID: $TAILWIND_PID)"
     else

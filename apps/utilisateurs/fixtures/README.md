@@ -4,7 +4,7 @@ Ce dossier contient toutes les données de la base pour faciliter le transfert e
 
 ## Fichiers de données (Fixtures)
 
-- `users.json` - Utilisateurs (comptes admin, gestionnaire, caissier)
+- `users.json` - Utilisateurs (comptes gestionnaire et caissier)
 - `articles.json` - Tous les articles du catalogue
 - `clients.json` - Tous les clients
 - `factures.json` - Toutes les factures
@@ -48,7 +48,7 @@ python manage.py loaddata details.json
 
 | Login | Mot de passe | Rôle |
 |-------|--------------|------|
-| `admin` | `admin` | Administrateur |
+| `gestionnaire2` | `admin` | Gestionnaire |
 | `gestionnaire` | `gestionnaire` | Gestionnaire |
 | `caissiere` | `caissiere` | Caissier |
 

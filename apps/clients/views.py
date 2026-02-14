@@ -46,7 +46,7 @@ def _serialize_client_row(client):
         "last_purchase": last_purchase,
         "status": status,
         "facture_count": client.facture_count or 0,
-        "client_type": client.type or "Occasionnel",
+        "client_type": client.type or "anonyme",
     }
 
 

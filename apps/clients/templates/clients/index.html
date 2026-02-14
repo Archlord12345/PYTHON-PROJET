@@ -15,16 +15,6 @@
     </button>
   </header>
 
-  {% if messages %}
-    <div class="space-y-2">
-      {% for message in messages %}
-        <div class="px-4 py-3 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300{% else %}bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300{% endif %}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
   <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200/80 dark:border-zinc-800 shadow-sm">
       <p class="text-sm font-medium text-slate-500 dark:text-zinc-400 mb-3">Total clients</p>
@@ -105,7 +95,7 @@
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-zinc-800">
           {% for client in clients %}
-          <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors" data-row-client='{"id":{{ client.id }},"name":"{{ client.name|escapejs }}","email":"{{ client.email|escapejs }}","phone":"{{ client.phone|escapejs }}","address":"{{ client.address|escapejs }}"}'>
+          <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors cursor-pointer" data-row-client='{"id":{{ client.id }},"name":"{{ client.name|escapejs }}","email":"{{ client.email|escapejs }}","phone":"{{ client.phone|escapejs }}","address":"{{ client.address|escapejs }}"}' data-client-row data-client-id="{{ client.id }}">
             <td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">{{ client.name }}</td>
             <td class="px-6 py-4 text-sm text-slate-600 dark:text-zinc-400">
               {% if client.email %}{{ client.email }}{% else %}<span class="italic opacity-50">Non renseigné</span>{% endif %}
@@ -386,6 +376,38 @@
   document.querySelectorAll('[data-open-view]').forEach(function (btn) {
     btn.addEventListener('click', async function () {
       const clientId = btn.getAttribute('data-client-id');
+      const res = await fetch(`/clients/${clientId}/details/`);
+      if (!res.ok) return;
+      const data = await res.json();
+
+      document.getElementById('view-name').textContent = data.name || '-';
+      document.getElementById('view-email').textContent = data.email || 'N/A';
+      document.getElementById('view-phone').textContent = data.phone || 'N/A';
+      document.getElementById('view-address').textContent = data.address || 'Non renseigne';
+      document.getElementById('view-total').textContent = data.total_spent || '0 FCFA';
+      document.getElementById('view-last').textContent = data.last_purchase || '-';
+
+      const history = document.getElementById('view-history');
+      history.innerHTML = '';
+      if (!data.history || !data.history.length) {
+        history.innerHTML = '<p class="text-sm text-slate-500">Aucun achat.</p>';
+      } else {
+        data.history.forEach(function (item) {
+          const node = document.createElement('div');
+          node.className = 'flex justify-between items-center py-2 px-3 bg-slate-50 dark:bg-zinc-800/50 rounded-lg';
+          node.innerHTML = `<span class="text-sm text-slate-600 dark:text-zinc-300">${item.date} - ${item.label}</span><span class="text-sm font-bold text-slate-900 dark:text-white">${item.amount}</span>`;
+          history.appendChild(node);
+        });
+      }
+
+      showModal(viewModal);
+    });
+  });
+
+  document.querySelectorAll('[data-client-row]').forEach(function (row) {
+    row.addEventListener('dblclick', async function () {
+      const clientId = row.getAttribute('data-client-id');
+      if (!clientId) return;
       const res = await fetch(`/clients/${clientId}/details/`);
       if (!res.ok) return;
       const data = await res.json();

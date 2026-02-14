@@ -24,6 +24,9 @@
     .cart-item:hover {
         background: #f8fafc;
     }
+    .dark .cart-item:hover {
+        background: #18181b;
+    }
 
     .modal-overlay {
         backdrop-filter: blur(4px);
@@ -72,6 +75,9 @@
     .search-result-item:hover {
         background: #f1f5f9;
     }
+    .dark .search-result-item:hover {
+        background: #18181b;
+    }
 
     .quantity-btn {
         transition: all 0.2s;
@@ -79,6 +85,9 @@
 
     .quantity-btn:hover {
         background: #e2e8f0;
+    }
+    .dark .quantity-btn:hover {
+        background: #27272a;
     }
 
     .empty-cart-icon {
@@ -177,7 +186,7 @@
             </div>
 
             <div class="flex gap-3">
-                <button
+                <button onclick="openDiscountModal()"
                     class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 dark:border-zinc-700 rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -202,6 +211,10 @@
                     <span class="text-slate-500 dark:text-zinc-400">TVA</span>
                     <span class="font-medium" id="totalTVA">0.00 €</span>
                 </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 dark:text-zinc-400">Remise</span>
+                    <span class="font-medium text-red-600" id="totalRemise">- 0.00 FCFA</span>
+                </div>
                 <div class="flex justify-between text-2xl font-bold border-t border-slate-200 dark:border-zinc-800 pt-4">
                     <span>Total TTC</span>
                     <span id="totalTTC">0.00 €</span>
@@ -222,6 +235,13 @@
             </div>
 
             <div class="p-6 border-t border-slate-200 dark:border-zinc-800">
+                <button onclick="openHistoryModal()"
+                    class="w-full mb-3 flex items-center justify-center gap-2 px-4 py-3 border border-slate-300 dark:border-zinc-700 rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors text-slate-900 dark:text-zinc-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path>
+                    </svg>
+                    Historique factures
+                </button>
                 <button id="paymentBtn" onclick="openPaymentModal()"
                     class="w-full btn-primary text-white py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled>
@@ -237,12 +257,12 @@
     </div>
 </div>
 
-<div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
+<div id="searchModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black/50 dark:bg-black/70">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
-            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-xl font-bold text-gray-900">Rechercher un article</h3>
-                <button onclick="closeSearchModal()" class="text-gray-400 hover:text-gray-600">
+        <div class="modal-content bg-white dark:bg-zinc-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col border border-slate-200 dark:border-zinc-800">
+            <div class="p-6 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-zinc-100">Rechercher un article</h3>
+                <button onclick="closeSearchModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12"></path>
@@ -252,7 +272,7 @@
 
             <div class="p-6">
                 <input type="text" id="modalSearchInput" placeholder="Rechercher par nom ou code-barres..."
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder-gray-600 text-gray-900">
+                    class="w-full px-4 py-3 border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder-slate-500 dark:placeholder-zinc-500 text-slate-900 dark:text-zinc-100 bg-white dark:bg-zinc-900">
             </div>
 
             <div id="searchResults" class="flex-1 overflow-y-auto px-6 pb-6"></div>
@@ -260,12 +280,12 @@
     </div>
 </div>
 
-<div id="receiptModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black bg-opacity-50">
+<div id="receiptModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black/50 dark:bg-black/70">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-xl font-bold text-gray-900">Ticket de caisse</h3>
-                <button onclick="closeReceiptModal()" class="text-gray-400 hover:text-gray-600">
+        <div class="modal-content bg-white dark:bg-zinc-900 rounded-lg shadow-xl max-w-md w-full border border-slate-200 dark:border-zinc-800">
+            <div class="p-6 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-zinc-100">Ticket de caisse</h3>
+                <button onclick="closeReceiptModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12"></path>
@@ -273,19 +293,19 @@
                 </button>
             </div>
 
-            <div class="p-8 text-center">
+            <div class="p-8 text-center text-slate-900 dark:text-zinc-100">
                 <h4 class="text-2xl font-bold mb-2">SuperMarket POS</h4>
-                <p class="text-sm text-gray-600">123 Rue du Commerce, 75001 Paris</p>
-                <p class="text-sm text-gray-600">Tél: 01 23 45 67 89</p>
+                <p class="text-sm text-slate-600 dark:text-zinc-400">123 Rue du Commerce, 75001 Paris</p>
+                <p class="text-sm text-slate-600 dark:text-zinc-400">Tél: 01 23 45 67 89</p>
 
-                <div class="my-6 py-4 border-y border-gray-200">
+                <div class="my-6 py-4 border-y border-slate-200 dark:border-zinc-800">
                     <p class="font-bold text-lg">Facture N° <span id="receiptNumber">FAC-12345679</span></p>
-                    <p class="text-sm text-gray-600" id="receiptDate">03/02/2026 21:23:16</p>
+                    <p class="text-sm text-slate-600 dark:text-zinc-400" id="receiptDate">03/02/2026 21:23:16</p>
                 </div>
 
                 <div id="receiptItems" class="text-left space-y-2 mb-6"></div>
 
-                <div class="border-t border-gray-200 pt-4 space-y-2 text-sm">
+                <div class="border-t border-slate-200 dark:border-zinc-800 pt-4 space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span>Total HT</span>
                         <span id="receiptHT">2.84 €</span>
@@ -294,15 +314,19 @@
                         <span>TVA</span>
                         <span id="receiptTVA">0.16 €</span>
                     </div>
+                    <div class="flex justify-between">
+                        <span>Remise</span>
+                        <span id="receiptRemise">- 0.00 FCFA</span>
+                    </div>
                     <div class="flex justify-between text-xl font-bold pt-2 border-t">
                         <span>Total TTC</span>
                         <span id="receiptTTC">3.00 €</span>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-4 border-t border-gray-200">
-                    <label for="paymentMethod" class="block text-sm text-gray-600 mb-2">Mode de paiement</label>
-                    <select id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white">
+                <div class="mt-6 pt-4 border-t border-slate-200 dark:border-zinc-800">
+                    <label for="paymentMethod" class="block text-sm text-slate-600 dark:text-zinc-400 mb-2">Mode de paiement</label>
+                    <select id="paymentMethod" class="w-full px-4 py-2 border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100">
                         <option value="especes">Espèces</option>
                         <option value="carte">Carte bancaire</option>
                         <option value="orange_money">Orange Money</option>
@@ -314,18 +338,18 @@
                 </div>
 
                 <!-- Client name input -->
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <label for="clientNameInput" class="block text-sm text-gray-600 mb-2">Nom du client (optionnel)</label>
+                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-zinc-800">
+                    <label for="clientNameInput" class="block text-sm text-slate-600 dark:text-zinc-400 mb-2">Nom du client (optionnel)</label>
                     <input type="text" id="clientNameInput" placeholder="Laisser vide pour client anonyme..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                        class="w-full px-4 py-2 border border-slate-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100">
                 </div>
 
-                <p class="mt-6 text-sm text-gray-500">Merci de votre visite !</p>
+                <p class="mt-6 text-sm text-slate-500 dark:text-zinc-400">Merci de votre visite !</p>
             </div>
 
-            <div class="p-6 border-t border-gray-200 flex gap-3">
+            <div class="p-6 border-t border-slate-200 dark:border-zinc-800 flex gap-3">
                 <button onclick="printReceipt()"
-                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 dark:border-zinc-700 rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors text-slate-900 dark:text-zinc-100">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
@@ -341,8 +365,56 @@
         </div>
     </div>
 </div>
+
+<div id="discountModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black/50 dark:bg-black/70">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-content bg-white dark:bg-zinc-900 rounded-lg shadow-xl max-w-md w-full border border-slate-200 dark:border-zinc-800">
+            <div class="p-6 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-zinc-100">Appliquer une remise</h3>
+                <button onclick="closeDiscountModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label for="discountType" class="block text-sm text-slate-600 dark:text-zinc-400 mb-2">Type</label>
+                    <select id="discountType" class="w-full px-4 py-2 border border-slate-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100">
+                        <option value="percent">Pourcentage (%)</option>
+                        <option value="amount">Montant fixe (FCFA)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="discountValue" class="block text-sm text-slate-600 dark:text-zinc-400 mb-2">Valeur</label>
+                    <input type="number" min="0" step="0.01" id="discountValue" class="w-full px-4 py-2 border border-slate-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100" placeholder="0">
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-200 dark:border-zinc-800 flex gap-3">
+                <button onclick="clearDiscount()" class="flex-1 px-4 py-2 rounded-lg border border-slate-300 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800">Retirer</button>
+                <button onclick="applyDiscount()" class="flex-1 btn-primary text-white px-4 py-2 rounded-lg">Appliquer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="historyModal" class="hidden fixed inset-0 z-50 modal-overlay bg-black/50 dark:bg-black/70">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-content bg-white dark:bg-zinc-900 rounded-lg shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col border border-slate-200 dark:border-zinc-800">
+            <div class="p-6 border-b border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-zinc-100">Historique des factures</h3>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="historyContent" class="p-6 overflow-y-auto"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'checkout/js/caisse.js' %}"></script>
+<script src="{% static 'checkout/js/caisse.js' %}?v=3"></script>
 {% endblock %}

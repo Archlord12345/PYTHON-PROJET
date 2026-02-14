@@ -10,14 +10,18 @@ import json
 @login_required
 def index(request):
     """Vue principale de la caisse"""
-    # Données de démonstration pour le caissier
+    user = request.user
+    display_name = getattr(user, "login", None) or getattr(user, "nom", None) or "Utilisateur"
+    display_role = getattr(user, "role", None) or "Utilisateur"
+
     context = {
-        'caissier_nom': 'Marie Dubois',
-        'caissier_role': 'Caissière'
+        'caissier_nom': display_name,
+        'caissier_role': display_role,
     }
     return render(request, 'caisse/index.html', context)
 
 @require_http_methods(["GET"])
+@login_required
 def search_articles(request):
     """Recherche d'articles par nom ou code-barres"""
     query = request.GET.get('q', '')
@@ -53,6 +57,7 @@ def create_facture(request):
     try:
         data = json.loads(request.body)
         items = data.get('items', [])
+        remise_data = data.get('remise') or {}
         
         if not items:
             return JsonResponse({'error': 'Le panier est vide'}, status=400)
@@ -67,7 +72,7 @@ def create_facture(request):
             client, _ = Client.objects.get_or_create(
                 nom=client_name,
                 defaults={
-                    "type": "Occasionnel",
+                    "type": "enregistre",
                     "prenom": "",
                 },
             )
@@ -75,12 +80,12 @@ def create_facture(request):
             # Client anonyme par défaut
             client, _ = Client.objects.get_or_create(
                 nom="Client de passage",
-                defaults={"type": "Occasionnel"},
+                defaults={"type": "anonyme"},
             )
 
-        montant_ht = Decimal("0")
-        montant_tva = Decimal("0")
-        montant_ttc = Decimal("0")
+        montant_ht_brut = Decimal("0")
+        montant_tva_brut = Decimal("0")
+        montant_ttc_brut = Decimal("0")
         detail_rows = []
 
         with transaction.atomic():
@@ -101,9 +106,9 @@ def create_facture(request):
                 line_ttc = (article.prix_TTC * quantite).quantize(Decimal("0.01"))
                 line_tva = (line_ttc - line_ht).quantize(Decimal("0.01"))
 
-                montant_ht += line_ht
-                montant_tva += line_tva
-                montant_ttc += line_ttc
+                montant_ht_brut += line_ht
+                montant_tva_brut += line_tva
+                montant_ttc_brut += line_ttc
 
                 detail_rows.append(
                     {
@@ -115,10 +120,24 @@ def create_facture(request):
                     }
                 )
 
+            remise_amount = Decimal(str(remise_data.get("amount") or "0")).quantize(Decimal("0.01"))
+            if remise_amount < 0:
+                remise_amount = Decimal("0.00")
+            if remise_amount > montant_ttc_brut:
+                remise_amount = montant_ttc_brut
+
+            net_ttc = (montant_ttc_brut - remise_amount).quantize(Decimal("0.01"))
+            ratio = Decimal("1")
+            if montant_ttc_brut > 0:
+                ratio = (net_ttc / montant_ttc_brut)
+
+            montant_ht = (montant_ht_brut * ratio).quantize(Decimal("0.01"))
+            montant_tva = (net_ttc - montant_ht).quantize(Decimal("0.01"))
+
             facture = Facture.objects.create(
                 montant_HT=montant_ht,
                 montant_TVA=montant_tva,
-                montant_TTC=montant_ttc,
+                montant_TTC=net_ttc,
                 mode_paiement=data.get("mode_paiement", "especes"),
                 client=client,
                 caissier=caissier,
@@ -140,3 +159,30 @@ def create_facture(request):
         return JsonResponse({'error': "Format de données invalide"}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def recent_factures(request):
+    factures = (
+        Facture.objects.select_related("client", "caissier")
+        .order_by("-date_facture")[:20]
+    )
+
+    data = []
+    for facture in factures:
+        client_name = " ".join(
+            part for part in [facture.client.prenom, facture.client.nom] if part
+        ).strip() or "Client"
+        data.append(
+            {
+                "id": facture.id,
+                "numero": f"FAC-{facture.id:08d}",
+                "date": facture.date_facture.strftime("%d/%m/%Y %H:%M"),
+                "total_ttc": float(facture.montant_TTC or 0),
+                "mode_paiement": facture.get_mode_paiement_display() if facture.mode_paiement else "N/A",
+                "client": client_name,
+            }
+        )
+
+    return JsonResponse({"factures": data})

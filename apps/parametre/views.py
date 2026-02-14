@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Configuration
 from .forms import ConfigurationForm
-from apps.gestionnaire.decorators import admin_required
+from apps.gestionnaire.decorators import gestionnaire_required
 
 @login_required
-@admin_required
+@gestionnaire_required
 def index(request):
     """Vue pour gérer les paramètres de l'application"""
     config = Configuration.objects.first()

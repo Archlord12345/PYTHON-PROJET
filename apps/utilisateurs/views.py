@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
 from django.db import IntegrityError
 from facturation.models import Utilisateur
-from apps.gestionnaire.decorators import admin_required
+from apps.gestionnaire.decorators import gestionnaire_required
 
 
 @login_required
-@admin_required
+@gestionnaire_required
 def index(request):
     """Liste tous les utilisateurs"""
     utilisateurs = Utilisateur.objects.all().order_by('role', 'login')
@@ -17,7 +16,6 @@ def index(request):
     role_choices = [
         ('Caissier', 'Caissier'),
         ('Gestionnaire', 'Gestionnaire'),
-        ('Administrateur', 'Administrateur'),
     ]
     
     context = {
@@ -26,13 +24,12 @@ def index(request):
         'total_utilisateurs': utilisateurs.count(),
         'total_caissiers': utilisateurs.filter(role='Caissier').count(),
         'total_gestionnaires': utilisateurs.filter(role='Gestionnaire').count(),
-        'total_admins': utilisateurs.filter(role='Administrateur').count(),
     }
     return render(request, 'utilisateurs/index.html', context)
 
 
 @login_required
-@admin_required
+@gestionnaire_required
 def create_user(request):
     """Créer un nouvel utilisateur"""
     if request.method != 'POST':
@@ -46,7 +43,7 @@ def create_user(request):
         messages.error(request, "Le login et le mot de passe sont requis.")
         return redirect('utilisateurs:index')
     
-    if role not in ['Caissier', 'Gestionnaire', 'Administrateur']:
+    if role not in ['Caissier', 'Gestionnaire']:
         messages.error(request, "Rôle invalide.")
         return redirect('utilisateurs:index')
     
@@ -67,7 +64,7 @@ def create_user(request):
 
 
 @login_required
-@admin_required
+@gestionnaire_required
 def update_user(request, user_id):
     """Modifier un utilisateur existant"""
     if request.method != 'POST':
@@ -107,7 +104,7 @@ def update_user(request, user_id):
 
 
 @login_required
-@admin_required
+@gestionnaire_required
 def delete_user(request, user_id):
     """Supprimer un utilisateur"""
     if request.method != 'POST':

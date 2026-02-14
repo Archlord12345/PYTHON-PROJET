@@ -5,7 +5,7 @@
   "fields": {
     "nom": "Client de passage",
     "prenom": null,
-    "type": "Occasionnel",
+    "type": "anonyme",
     "email": null,
     "telephone": null,
     "adresse": null
@@ -17,7 +17,7 @@
   "fields": {
     "nom": "marri",
     "prenom": "",
-    "type": "Occasionnel",
+    "type": "anonyme",
     "email": null,
     "telephone": null,
     "adresse": null
